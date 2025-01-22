@@ -16,8 +16,6 @@ namespace CombatPathing
 			AdvanceInterruptHook::InstallHook();
 
 			BackoffStartHook::InstallHook();
-			//BackoffChanceHook::InstallHook();
-
 			BackoffChanceHookAE::InstallHook();
 			//PrepareFunc01::InstallHook();
 

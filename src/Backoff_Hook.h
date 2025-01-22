@@ -73,36 +73,21 @@ namespace CombatPathing
 			{
 				Xbyak::Label funcLabel;
 				Xbyak::Label retnLabel;
-				//Xbyak::Label originalFunc;
-
-				//sub(rsp, 0x20);
-				//call(ptr[rip + originalFunc]);  //call original function
-				//add(rsp, 0x20);
 
 				push(rcx);
 				push(rdx);
-				//push(r8);
-				//push(r9);
 
-				//mov(r8, rdi);               //RE::TreeCtors_extradata* a_extradata
 				mov(rdx, rbx);              // RE::CombatBehaviorTreeNode* a_node
-				mov(rcx, ptr[rbp - 0x28]);  // RE::NodeArray& a_array
+				lea(rcx, ptr[rbp - 0x28]);  // RE::NodeArray& a_array
 
 				sub(rsp, 0x20);
 				call(ptr[rip + funcLabel]);  //call thunk
 				add(rsp, 0x20);
 
-				//mov(ptr[rbp - 0x28], rax);
-
-				//pop(r9);
-				//pop(r8);
 				pop(rdx);
 				pop(rcx);
 
 				jmp(ptr[rip + retnLabel]);  //jump back to original code
-
-				//L(originalFunc);
-				//dq(REL::ID(47516).address());
 
 				L(funcLabel);
 				dq(func);
@@ -117,10 +102,10 @@ namespace CombatPathing
 			constexpr auto targetAddress = REL::ID(47928);
 			// +0x10F -> 140817030
 
-			REL::safe_fill(targetAddress.address() + 0x10F, REL::NOP, 0x7);
+			REL::safe_fill(targetAddress.address() + 0x127, REL::NOP, 0x7);
 
-			REL::Relocation<std::uintptr_t> target{ targetAddress, 0x10F };
-			auto trampolineJmp = TrampolineCall(target.address() + 0xE6, reinterpret_cast<std::uintptr_t>(thunk));
+			REL::Relocation<std::uintptr_t> target{ targetAddress, 0x127 };
+			auto trampolineJmp = TrampolineCall(target.address() + 0xCE, reinterpret_cast<std::uintptr_t>(thunk));
 
 			auto& trampoline = SKSE::GetTrampoline();
 			SKSE::AllocTrampoline(trampolineJmp.getSize());
@@ -141,5 +126,4 @@ namespace CombatPathing
 
 		static void thunk(RE::NodeArray& a_array, RE::CombatBehaviorTreeNode* a_node);
 	};
-
 }
