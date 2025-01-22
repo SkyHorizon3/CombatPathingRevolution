@@ -69,36 +69,45 @@ namespace CombatPathing
 		return a_min + a_mult * (a_max - a_min);
 	}
 
+	// not used
 	NodeArray& wrap_to_valuenode_13(NodeArray& a, const char* name, TreeCtors_extradata* extradata, CombatBehaviorTreeNode* node)
 	{
 		// 1407DA290
 		return _generic_foo<46736, NodeArray&, NodeArray&, const char*, TreeCtors_extradata*, CombatBehaviorTreeNode*>(a, name, extradata, node);
 	}
 
+	// used
+	// inlined in this function on AE: 140816E40 - better example: 14083233B
 	NodeArray& wrap_to_conditional_2(NodeArray& a, const char* name, TreeCtors_extradata* extradata, CombatBehaviorTreeNode* node)
 	{
+		//VTABLE_CombatBehaviorTreeConditionalNode_CombatBehaviorExpression_CombatBehaviorMemberFunc_CombatBehaviorContextCloseMovement_bool__CombatBehaviorContextCloseMovement_____void____
+
 		// SkyrimSE.exe+7da060
 		return _generic_foo<46732, NodeArray&, NodeArray&, const char*, void*, CombatBehaviorTreeNode*>(a, name, extradata, node);
 	}
 
+	// not used
 	NodeArray& init_withNode_withname(NodeArray& array, const char* name, CombatBehaviorTreeNode* node)
 	{
 		return _generic_foo<46261, NodeArray&, NodeArray&, const char*, CombatBehaviorTreeNode*>(array, name, node);
 	}
 
+	//used
 	NodeArray& pushback_parentof(NodeArray& array, NodeArray& cont_node)
 	{
-		return _generic_foo<46255, NodeArray&, NodeArray&, NodeArray&>(array, cont_node);
+		return _generic_foo<47510, NodeArray&, NodeArray&, NodeArray&>(array, cont_node);
 	}
 
+	// used
 	Character* CombatAI__get_he()
 	{
-		return _generic_foo<46265, Character*>();  // SkyrimSE.exe+7c7b20
+		return _generic_foo<47520, Character*>();  // SkyrimSE.exe+7c7b20
 	}
 
+	//used
 	Character* CombatAI__get_me()
 	{
-		return _generic_foo<46264, Character*>();  // SkyrimSE.exe+7C7A40
+		return _generic_foo<47519, Character*>();  // SkyrimSE.exe+7C7A40
 	}
 
 }

@@ -37,6 +37,7 @@
 #include <complex>
 #include <concepts>
 #include <condition_variable>
+#include <coroutine>
 #include <deque>
 #include <exception>
 #include <execution>
@@ -109,6 +110,8 @@ using Random = effolkronium::random_static;
 #include <Psapi.h>
 #include <ShlObj_core.h>
 #include <Windows.h>
+
+#include <xbyak/xbyak.h>
 
 using namespace std::literals;
 using namespace REL::literals;

@@ -13,7 +13,7 @@ namespace CombatPathing
 			SKSE::AllocTrampoline(1 << 4);
 			auto& trampoline = SKSE::GetTrampoline();
 
-			REL::Relocation<std::uintptr_t> Base{ REL::RelocationID(46712, 802680) };  // 7D73D0, 8149B0
+			REL::Relocation<std::uintptr_t> Base{ REL::RelocationID(46712, 47908) };  // 7D73D0, 8149B0
 			_GetFallbackDistance = trampoline.write_call<5>(Base.address() + REL::Relocate(0x1EB, 0x1B0), GetFallbackDistance);
 			INFO("{} Done!", __FUNCTION__);
 		}
@@ -30,9 +30,13 @@ namespace CombatPathing
 		static float GetMaxFallbackDistance(RE::Actor* a_me, RE::Actor* a_he);
 
 		// 1-5-97-0 @ 0x7D7740
-		static constexpr std::uintptr_t FuncID = 46713;
-		static constexpr std::ptrdiff_t OffsetL = 0x246;
-		static constexpr std::ptrdiff_t OffsetH = 0x24E;
+		static constexpr std::uintptr_t SE_FuncID = 46713;   //1407d7740
+		static constexpr std::ptrdiff_t SE_OffsetL = 0x246;  //1407D7A00
+		static constexpr std::ptrdiff_t SE_OffsetH = 0x24E;  //1407D7A08
+
+		static constexpr std::uintptr_t AE_FuncID = 47909;  //140814CD0
+		static constexpr std::ptrdiff_t AE_OffsetL = 0x2E7;
+		static constexpr std::ptrdiff_t AE_OffsetH = 0x2EF;
 
 		static constexpr Patch RelocateReturn{
 			// addss xmm6, xmm0
@@ -45,15 +49,15 @@ namespace CombatPathing
 		{
 			SKSE::AllocTrampoline(1 << 6);
 
-			auto funcAddr = REL::ID(FuncID).address();
+			auto funcAddr = REL::RelocationID(SE_FuncID, AE_FuncID).address();
 			Patch RelocatePointer{
-				AsPointer(funcAddr + OffsetL + 0x10),  //7D7996
+				AsPointer(funcAddr + REL::Relocate(SE_OffsetL, AE_OffsetL) + 0x10),  //7D7996
 				6
 			};
 
 			auto handle = DKUtil::Hook::AddCaveHook(
 				funcAddr,
-				{ OffsetL, OffsetH },
+				REL::Relocate(std::make_pair(SE_OffsetL, SE_OffsetH), std::make_pair(AE_OffsetL, AE_OffsetH)),
 				FUNC_INFO(GetMaxFallbackDistance),
 				&RelocatePointer,
 				&RelocateReturn,
@@ -65,7 +69,6 @@ namespace CombatPathing
 		}
 	};
 
-	// TODO
 	class FallbackWaitTimeHook1
 	{
 	public:
@@ -74,8 +77,8 @@ namespace CombatPathing
 			SKSE::AllocTrampoline(1 << 4);
 			auto& trampoline = SKSE::GetTrampoline();
 
-			REL::Relocation<std::uintptr_t> Base{ REL::ID(46713) };  //sub_1407D7740
-			_GetFallbackWaitTime = trampoline.write_call<5>(Base.address() + 0xEA, GetFallbackWaitTime);
+			REL::Relocation<std::uintptr_t> Base{ REL::RelocationID(46713, 47909) };  //sub_1407D7740
+			_GetFallbackWaitTime = trampoline.write_call<5>(Base.address() + REL::Relocate(0xEA, 0x12E), GetFallbackWaitTime);
 			INFO("{} Done!", __FUNCTION__);
 		}
 
@@ -89,9 +92,13 @@ namespace CombatPathing
 	{
 		static float GetMinFallbackWaitTime(RE::Actor* a_me, RE::Actor* a_he);
 
-		static constexpr std::uintptr_t FuncID = 46713;   //1407d7740
-		static constexpr std::ptrdiff_t OffsetL = 0x2C0;  //1407D7A00
-		static constexpr std::ptrdiff_t OffsetH = 0x2C8;  //1407D7A08
+		static constexpr std::uintptr_t AE_FuncID = 47909;  //140814CD0
+		static constexpr std::ptrdiff_t AE_OffsetL = 0x362;
+		static constexpr std::ptrdiff_t AE_OffsetH = 0x36A;
+
+		static constexpr std::uintptr_t SE_FuncID = 46713;   //1407d7740
+		static constexpr std::ptrdiff_t SE_OffsetL = 0x2C0;  //1407D7A00
+		static constexpr std::ptrdiff_t SE_OffsetH = 0x2C8;  //1407D7A08
 
 		static constexpr Patch RelocateReturn{
 			// movss xmm1, xmm0
@@ -104,15 +111,15 @@ namespace CombatPathing
 		{
 			SKSE::AllocTrampoline(1 << 6);
 
-			auto funcAddr = REL::ID(FuncID).address();
+			auto funcAddr = REL::RelocationID(SE_FuncID, AE_FuncID).address();
 			Patch RelocatePointer{
-				AsPointer(funcAddr + 0x256),  //7D7996
+				AsPointer(funcAddr + REL::Relocate(0x256, 0x2F7)),  //7D7996
 				6
 			};
 
 			auto handle = DKUtil::Hook::AddCaveHook(
 				funcAddr,
-				{ OffsetL, OffsetH },
+				REL::Relocate(std::make_pair(SE_OffsetL, SE_OffsetH), std::make_pair(AE_OffsetL, AE_OffsetH)),
 				FUNC_INFO(GetMinFallbackWaitTime),
 				&RelocatePointer,
 				&RelocateReturn,

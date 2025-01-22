@@ -18,6 +18,7 @@ void Utils::splitSV(std::vector<std::string_view>& ret, std::string_view strv, c
 	}
 }
 
+/*
 void Utils::SGTM(float a_in)
 {
 	static float* g_SGTM = (float*)RELOCATION_ID(511883, 388443).address();
@@ -26,6 +27,7 @@ void Utils::SGTM(float a_in)
 	REL::Relocation<func_t> func{ RELOCATION_ID(66989, 0) };
 	return;
 }
+*/
 
 /*Converts a string view into an int, safe for none null-terminated string views. Returns false if conversion isn't successful.*/
 bool Utils::string_view::to_int(std::string_view input, int& out)

@@ -1,8 +1,9 @@
-#pragma once 
+#pragma once
 #include "RE/CombatBehaviorTreeNode.h"
-       
+
 namespace RE
 {
+	/*
 	class CombatBehaviorTreeCreateContextNodeBase_CombatBehaviorContextCloseMovement_ : public CombatBehaviorTreeNode
 	{
 	public:
@@ -23,6 +24,7 @@ namespace RE
 	{
 	public:
 		inline static constexpr auto RTTI = RE::RTTI_CombatBehaviorTreeCreateContextNode_CombatBehaviorContextCloseMovement_;
+		inline static constexpr auto VTABLE = RE::VTABLE_CombatBehaviorTreeCreateContextNode_CombatBehaviorContextCloseMovement_;
 
 		void* destroy(char need_freeself) override;
 		CombatBehaviorTreeControl* act(CombatBehaviorTreeControl* control) override;
@@ -30,22 +32,23 @@ namespace RE
 		static CombatBehaviorTreeCreateContextNode_CombatBehaviorContextCloseMovement_* createnew();
 	};
 	static_assert(sizeof(CombatBehaviorTreeCreateContextNode_CombatBehaviorContextCloseMovement_) == 0x28);
-	using NodeCloseMovementContext = CombatBehaviorTreeCreateContextNode_CombatBehaviorContextCloseMovement_;
+	//using NodeCloseMovementContext = CombatBehaviorTreeCreateContextNode_CombatBehaviorContextCloseMovement_;
+	*/
 
-	DECLARE_CombatBehaviorTreeNodeObject(CombatBehaviorCircleDistant);  // 141696210
-	using NodeCloseMovementCircleDistant = CombatBehaviorTreeNodeObject_CombatBehaviorCircleDistant_;
+	//DECLARE_CombatBehaviorTreeNodeObject(CombatBehaviorCircleDistant);  // 141696210
+	//using NodeCloseMovementCircleDistant = CombatBehaviorTreeNodeObject_CombatBehaviorCircleDistant_;
 
-	DECLARE_CombatBehaviorTreeNodeObject(CombatBehaviorSurround);  // 141696160
-	using NodeCloseMovementSurround = CombatBehaviorTreeNodeObject_CombatBehaviorSurround_;
+	//DECLARE_CombatBehaviorTreeNodeObject(CombatBehaviorSurround);  // 141696160
+	//using NodeCloseMovementSurround = CombatBehaviorTreeNodeObject_CombatBehaviorSurround_;
 
-	DECLARE_CombatBehaviorTreeNodeObject(CombatBehaviorAdvance);  // 1416960B0
-	using NodeCloseMovementAdvance = CombatBehaviorTreeNodeObject_CombatBehaviorAdvance_;
+	//DECLARE_CombatBehaviorTreeNodeObject(CombatBehaviorAdvance);  // 1416960B0
+	//using NodeCloseMovementAdvance = CombatBehaviorTreeNodeObject_CombatBehaviorAdvance_;
 
-	DECLARE_CombatBehaviorTreeNodeObject(CombatBehaviorFallbackToRanged);  // 141696000
-	using NodeCloseMovementFallbackToRanged = CombatBehaviorTreeNodeObject_CombatBehaviorFallbackToRanged_;
+	//DECLARE_CombatBehaviorTreeNodeObject(CombatBehaviorFallbackToRanged);  // 141696000
+	//using NodeCloseMovementFallbackToRanged = CombatBehaviorTreeNodeObject_CombatBehaviorFallbackToRanged_;
 
-	DECLARE_CombatBehaviorTreeNodeObject(CombatBehaviorReposition);  // 1416962C0
-	using NodeCloseMovementReposition = CombatBehaviorTreeNodeObject_CombatBehaviorReposition_;
+	//DECLARE_CombatBehaviorTreeNodeObject(CombatBehaviorReposition);  // 1416962C0
+	//using NodeCloseMovementReposition = CombatBehaviorTreeNodeObject_CombatBehaviorReposition_;
 
 	DECLARE_CombatBehaviorTreeNodeObject(CombatBehaviorBackoff);  // 141696580
 	using NodeCloseMovementBackoff = CombatBehaviorTreeNodeObject_CombatBehaviorBackoff_;
@@ -53,7 +56,7 @@ namespace RE
 	DECLARE_CombatBehaviorTreeNodeObject(CombatBehaviorCircle);  // 1416964D0
 	using NodeCloseMovementCircle = CombatBehaviorTreeNodeObject_CombatBehaviorCircle_;
 
-	DECLARE_CombatBehaviorTreeNodeObject(CombatBehaviorFallback);  // 141696420
-	using NodeCloseMovementFallback = CombatBehaviorTreeNodeObject_CombatBehaviorFallback_;
+	//DECLARE_CombatBehaviorTreeNodeObject(CombatBehaviorFallback);  // 141696420
+	//using NodeCloseMovementFallback = CombatBehaviorTreeNodeObject_CombatBehaviorFallback_;
 
 }

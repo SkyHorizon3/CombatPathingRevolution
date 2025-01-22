@@ -1,2 +1,5 @@
-build/
-.vscode
+.idea
+.vs
+.vscode/settings.json
+build
+cmake-build*

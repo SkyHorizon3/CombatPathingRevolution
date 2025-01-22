@@ -18,7 +18,7 @@ namespace CombatPathing
 
 			REL::Relocation<std::uintptr_t> Base{ REL::RelocationID(49720, 50647) };
 
-			_GetCirclingChance = trampoline.write_branch<5>(Base.address() + REL::Relocate(0x22, 0x2C), GetCirclingChance);
+			_GetCirclingChance = trampoline.write_branch<5>(Base.address() + 0x22, GetCirclingChance);
 			INFO("{} Done!", __FUNCTION__);
 		}
 
@@ -37,8 +37,8 @@ namespace CombatPathing
 			SKSE::AllocTrampoline(1 << 4);
 			auto& trampoline = SKSE::GetTrampoline();
 
-			REL::Relocation<std::uintptr_t> Base{ REL::ID(46731) };  //sub_1407D97D0
-			_PushBackNode = trampoline.write_call<5>(Base.address() + 0x493, PushBackNode);
+			REL::Relocation<std::uintptr_t> Base{ REL::RelocationID(46731, 47928) };  //sub_1407D97D0 AE untested
+			_PushBackNode = trampoline.write_call<5>(Base.address() + REL::Relocate(0x493, 0xE1C), PushBackNode);
 			INFO("{} Done!", __FUNCTION__);
 		}
 
@@ -121,14 +121,17 @@ namespace CombatPathing
 		}
 	};
 
-	// TODO
 	class CircleAngleHook3
 	{
 		static float GetMaxCircleAngle();
 
-		static constexpr std::uintptr_t FuncID = 46720;   //1407D8200
-		static constexpr std::ptrdiff_t OffsetL = 0x2A2;  //1407D84A2
-		static constexpr std::ptrdiff_t OffsetH = 0x2AA;  //1407D84AA
+		static constexpr std::uintptr_t SE_FuncID = 46720;   //1407D8200
+		static constexpr std::ptrdiff_t SE_OffsetL = 0x2A2;  //1407D84A2
+		static constexpr std::ptrdiff_t SE_OffsetH = 0x2AA;  //1407D84AA
+
+		static constexpr std::uintptr_t AE_FuncID = 47916;   //1408158B0
+		static constexpr std::ptrdiff_t AE_OffsetL = 0x234;  //140815AE4
+		static constexpr std::ptrdiff_t AE_OffsetH = 0x23C;  //140815AEC
 
 		static constexpr Patch RelocateReturn{
 			// comiss xmm11, xmm0
@@ -141,11 +144,9 @@ namespace CombatPathing
 		{
 			SKSE::AllocTrampoline(1 << 6);
 
-			auto funcAddr = REL::ID(FuncID).address();
-
 			auto handle = DKUtil::Hook::AddCaveHook(
-				funcAddr,
-				{ OffsetL, OffsetH },
+				REL::RelocationID(SE_FuncID, AE_FuncID).address(),
+				REL::Relocate(std::make_pair(SE_OffsetL, SE_OffsetH), std::make_pair(AE_OffsetL, AE_OffsetH)),
 				FUNC_INFO(GetMaxCircleAngle),
 				nullptr,
 				&RelocateReturn,
@@ -164,10 +165,10 @@ namespace CombatPathing
 		{
 			SKSE::AllocTrampoline(1 << 4);
 
-			REL::Relocation<std::uintptr_t> WithinHeadingAngleBase{ REL::ID(46720) };
+			REL::Relocation<std::uintptr_t> WithinHeadingAngleBase{ REL::RelocationID(46720, 47916) };
 
 			auto& trampoline = SKSE::GetTrampoline();
-			_WithinHeadingAngle = trampoline.write_call<5>(WithinHeadingAngleBase.address() + 0x366, WithinHeadingAngle);
+			_WithinHeadingAngle = trampoline.write_call<5>(WithinHeadingAngleBase.address() + REL::Relocate(0x366, 0x2F2), WithinHeadingAngle);
 
 			INFO("{} Done!", __FUNCTION__);
 		}

@@ -2,6 +2,7 @@
 
 namespace RE
 {
+
 	class CombatBehaviorTreeNode;
 
 	class CombatBehaviorTreeControl
@@ -39,12 +40,12 @@ namespace RE
 
 		void Ascend()
 		{
-			return _generic_foo<46229, void, CombatBehaviorTreeControl*>(this);  // 1407C69D0
+			return _generic_foo<47484, void, CombatBehaviorTreeControl*>(this);  // 1407C69D0
 		}
 
 		void SetFailed(bool a_fail)
 		{
-			return _generic_foo<46240, void, CombatBehaviorTreeControl*, bool>(this, a_fail);  // 1407C6D30
+			return _generic_foo<47496, void, CombatBehaviorTreeControl*, bool>(this, a_fail);  // 1407C6D30
 		}
 
 		BSTArrayHeapAllocator unk00;                     //00
@@ -60,5 +61,4 @@ namespace RE
 		CombatController* master_controller;             //158
 	};
 	static_assert(offsetof(class CombatBehaviorTreeControl, master_controller) == 0x158);
-
 }

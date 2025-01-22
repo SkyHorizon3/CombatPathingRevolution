@@ -1,14 +1,14 @@
 #include "LoadGame.h"
 
-DLLEXPORT constinit auto SKSEPlugin_Version = []() noexcept {
-	SKSE::PluginVersionData data{};
+DLLEXPORT constinit auto SKSEPlugin_Version = []() {
+	SKSE::PluginVersionData v;
 
-	data.PluginVersion(Plugin::Version);
-	data.PluginName(Plugin::NAME);
-	data.AuthorName(Plugin::AUTHOR);
-	data.UsesAddressLibrary(true);
-
-	return data;
+	v.PluginName(Plugin::NAME);
+	v.AuthorName(Plugin::AUTHOR);
+	v.PluginVersion(Plugin::Version);
+	v.UsesAddressLibrary();
+	v.UsesNoStructs();
+	return v;
 }();
 
 DLLEXPORT bool SKSEAPI SKSEPlugin_Query(const SKSE::QueryInterface*, SKSE::PluginInfo* pluginInfo)
@@ -22,16 +22,18 @@ DLLEXPORT bool SKSEAPI SKSEPlugin_Query(const SKSE::QueryInterface*, SKSE::Plugi
 
 DLLEXPORT bool SKSEAPI SKSEPlugin_Load(const SKSE::LoadInterface* a_skse)
 {
+	/*
 #ifndef NDEBUG
 	while (!IsDebuggerPresent()) {
 		Sleep(100);
 	}
 #endif
+	*/
 
 	DKUtil::Logger::Init(Plugin::NAME, REL::Module::get().version().string());
 
 	REL::Module::reset();
-	SKSE::Init(a_skse);
+	SKSE::Init(a_skse, false);
 
 	INFO("{} v{} loaded", Plugin::NAME, Plugin::Version);
 

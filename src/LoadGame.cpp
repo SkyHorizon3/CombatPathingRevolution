@@ -5,6 +5,7 @@
 #include "Fallback_Hook.h"
 #include "PayloadInterpreter/hooks.h"
 #include "Settings.h"
+#include "Util.h"
 
 namespace CombatPathing
 {
@@ -15,8 +16,12 @@ namespace CombatPathing
 			AdvanceInterruptHook::InstallHook();
 
 			BackoffStartHook::InstallHook();
-			BackoffChanceHook::InstallHook();
+			//BackoffChanceHook::InstallHook();
 
+			BackoffChanceHookAE::InstallHook();
+			//PrepareFunc01::InstallHook();
+
+			/*
 			CirclingChanceHook::InstallHook();
 			AdvanceToCircleHook::InstallHook();
 			CircleAngleHook1::InstallHook();
@@ -28,7 +33,7 @@ namespace CombatPathing
 			FallbackDistanceHook2::InstallHook();
 			FallbackWaitTimeHook1::InstallHook();
 			FallbackWaitTimeHook2::InstallHook();
-
+			*/
 			Hooks::hook_animationEvent::install();
 
 		} else if (msg->type == SKSE::MessagingInterface::kDataLoaded) {

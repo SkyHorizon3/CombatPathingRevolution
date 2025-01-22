@@ -16,7 +16,7 @@ namespace CombatPathing
 			if (a_actor->GetGraphVariableFloat(FALLBACK_DIST_MIN_GV, fallbackDistMin) && a_actor->GetGraphVariableFloat(FALLBACK_DIST_MAX_GV, fallbackDistMax)) {
 				auto fallbackMult = a_actor->GetActorRuntimeData().combatController->combatStyle->closeRangeData.fallbackMult;
 				auto FallbackDistance = RescaleValue(fallbackMult, fallbackDistMin, fallbackDistMax);
-				auto diameter = a_actor->GetBoundRadius() * 2.0f;
+				auto diameter = CombatPathing::GetBoundRadius(a_actor) * 2.0f;
 
 				return std::max(FallbackDistance, diameter);
 			}

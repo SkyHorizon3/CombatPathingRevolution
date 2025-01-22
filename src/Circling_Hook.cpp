@@ -12,7 +12,7 @@ namespace CombatPathing
 	static float GetCircleChance(RE::Character* a_character)
 	{
 		//sub_140845070
-		return _generic_foo<49720, float, RE::Character*>(a_character);
+		return _generic_foo<50647, float, RE::Character*>(a_character);
 	}
 
 	static bool WithinCricleRange(RE::Character* me, RE::Character* he)
@@ -26,7 +26,7 @@ namespace CombatPathing
 					if (me->GetGraphVariableFloat(CIRCLING_MIN_DIST_GV, circlingDistMin) && me->GetGraphVariableFloat(CIRCLING_MAX_DIST_GV, circlingDistMax)) {
 						auto optimalWeapRange = GetEquippementRange(rtm.combatController->inventory);
 						auto maxWeapRange = GetEquippementRange(rtm.combatController->inventory, true);
-						auto distance = me->GetPosition().GetDistance(he->GetPosition()) - he->GetBoundRadius();
+						auto distance = me->GetPosition().GetDistance(he->GetPosition()) - CombatPathing::GetBoundRadius(he);
 						circlingDistMin += circlingDistMin > 0.f ? optimalWeapRange : 0.f;
 						circlingDistMax += maxWeapRange;
 
@@ -52,6 +52,7 @@ namespace CombatPathing
 
 	RE::NodeArray& AdvanceToCircleHook::PushBackNode(RE::NodeArray& a_master, RE::NodeArray& a_target)
 	{
+		/*
 		auto nodeCirlce = RE::NodeCloseMovementCircle::createnew();
 		if (nodeCirlce) {
 			NodeArray array;
@@ -59,8 +60,9 @@ namespace CombatPathing
 			extraData.func1 = ShouldCircle;
 			extraData.func2 = nullptr;
 
-			a_master = pushback_parentof(a_master, wrap_to_conditional_2(array, "CPR Circle", &extraData, nodeCirlce));
+			//a_master = pushback_parentof(a_master, wrap_to_conditional_2(array, "CPR Circle", &extraData, nodeCirlce));
 		}
+		*/
 
 		return _PushBackNode(a_master, a_target);
 	}

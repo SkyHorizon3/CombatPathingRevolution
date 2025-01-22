@@ -26,21 +26,23 @@ namespace CombatPathing
 			"\xF3\x0F\x10\xD6"
 			// mov r9, rbp
 			"\x49\x89\xE9"
-			// mov [rsp-0x8], rbx
-			"\x48\x89\x5C\x24\xF8",
-			17
+			// push rbx
+			"\x53",
+			13
 		};
 
 		static inline constexpr Patch MedianPatch{
 			// xor cl
 			"\x30\xC9",
-			19
+			15
 		};
 
 		static inline constexpr Patch Epilog{
+			// pop rbx
+			"\x5B"
 			// sahf
 			"\x58\x9E",
-			2
+			3
 		};
 
 		// cl, rdx, xmm2, r9, rsp-0x8
@@ -52,7 +54,7 @@ namespace CombatPathing
 			SKSE::AllocTrampoline(static_cast<size_t>(1) << 7);
 
 			auto Hook_SetRadius = DKUtil::Hook::AddCaveHook(
-				DKUtil::Hook::IDToAbs(50643, 49716),
+				DKUtil::Hook::IDToAbs(AE_FuncID, SE_FuncID),
 				{ RadiusL, RadiusH },
 				FUNC_INFO(RecalculateAdvanceRadius),
 				&RadiusPatch,
@@ -62,7 +64,7 @@ namespace CombatPathing
 			Hook_SetRadius->Enable();
 
 			auto Hook_SetMedian = DKUtil::Hook::AddCaveHook(
-				DKUtil::Hook::IDToAbs(50643, 49716),
+				DKUtil::Hook::IDToAbs(AE_FuncID, SE_FuncID),
 				{ MedianL, MedianH },
 				FUNC_INFO(RecalculateAdvanceRadius),
 				&MedianPatch,
@@ -72,6 +74,9 @@ namespace CombatPathing
 			// recalculate displacement
 			Disp32 disp = *std::bit_cast<Disp32*>(AsPointer(Hook_SetMedian->TramEntry + 0x4));
 			DKUtil::Hook::WriteImm(Hook_SetMedian->TramEntry + 0x4, static_cast<Disp32>(Hook_SetMedian->CaveEntry + disp - Hook_SetMedian->TramEntry));
+
+			// F3 0F 10 0D | disp32
+			//DKUtil::Hook::ReDisp(Hook_SetMedian->CaveEntry, Hook_SetMedian->TramEntry, 0x4);
 
 			DKUtil::Hook::WritePatch(Hook_SetMedian->TramEntry + Hook_SetMedian->CaveSize + 0x2, &RadiusPatch);
 
@@ -87,7 +92,7 @@ namespace CombatPathing
 		static void InstallHook()
 		{
 			auto& trampoline = SKSE::GetTrampoline();
-			_Update = trampoline.write_branch<5>(REL::ID(529964).address() + 0x9, Update);  // SkyrimSE.exe+7DFF29
+			_Update = trampoline.write_branch<5>(REL::RelocationID(529964, 48092).address() + 0x9, Update);  // SkyrimSE.exe+7DFF29
 			INFO("{} Done!", __FUNCTION__);
 		}
 

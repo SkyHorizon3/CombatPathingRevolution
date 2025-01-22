@@ -17,6 +17,8 @@ project(
 	LANGUAGES CXX
 )
 
+set(BUILD_TESTS OFF)
+
 # out-of-source builds only
 if(${PROJECT_SOURCE_DIR} STREQUAL ${PROJECT_BINARY_DIR})
 	message(FATAL_ERROR "In-source builds are not allowed.")
@@ -123,7 +125,7 @@ if(MSVC)
 		${PROJECT_NAME}
 		PRIVATE
 		/MP
-		/await
+		#/await
 		/W0
 		/WX
 		/permissive-
@@ -158,15 +160,15 @@ target_precompile_headers(
 )
 
 # post build event
-add_custom_command(
-	TARGET
-	${PROJECT_NAME}
-	POST_BUILD
-	COMMAND
-	powershell -NoProfile -ExecutionPolicy Bypass -File " ${CMAKE_CURRENT_SOURCE_DIR}/!Update.ps1" "COPY" "${PROJECT_VERSION}" "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(ConfigurationName)" "${PROJECT_NAME}" "${ANNIVERSARY_EDITION} "
-	COMMENT
-	" Updating project :))"
-)
+#add_custom_command(
+#	TARGET
+#	${PROJECT_NAME}
+#	POST_BUILD
+#	COMMAND
+#	powershell -NoProfile -ExecutionPolicy Bypass -File " ${CMAKE_CURRENT_SOURCE_DIR}/!Update.ps1" "COPY" "${PROJECT_VERSION}" "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(ConfigurationName)" "${PROJECT_NAME}" "${ANNIVERSARY_EDITION} "
+#	COMMENT
+#	" Updating project :))"
+#)
 
 # called via !Rebuild.ps1
 if(DEFINED GROUP)

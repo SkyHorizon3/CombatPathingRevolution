@@ -29,6 +29,7 @@ namespace RE
 		virtual bool __unk_8(CombatBehaviorTreeControl* control);
 		virtual RE::BSFixedString* __unk_9();
 
+		/*
 		void init_childrens_parents(NodeArray& cont_node)
 		{
 			return _generic_foo<46305, void, CombatBehaviorTreeNode*, NodeArray&>(this, cont_node);
@@ -55,6 +56,7 @@ namespace RE
 		{
 			return _generic_foo<46302, void, CombatBehaviorTreeNode*>(this);  // SkyrimSE.exe+7c8c40
 		}
+		*/
 
 		// members
 		RE::BSFixedString name;
@@ -87,7 +89,7 @@ namespace RE
 	{                                                                                          \
 	public:                                                                                    \
 		inline static constexpr auto RTTI = RE::RTTI_CombatBehaviorTreeNodeObject_##T##_;      \
-                                                                                               \
+		inline static constexpr auto VTABLE = RE::RTTI_CombatBehaviorTreeNodeObject_##T##_;    \
 		void* destroy(char need_freeself) override;                                            \
 		CombatBehaviorTreeControl* act(CombatBehaviorTreeControl* control) override;           \
                                                                                                \

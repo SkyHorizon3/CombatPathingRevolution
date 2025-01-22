@@ -3,6 +3,7 @@
 
 namespace RE
 {
+
 	class CombatBehaviorController
 	{
 	public:
