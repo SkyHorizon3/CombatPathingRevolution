@@ -80,10 +80,8 @@ namespace CombatPathing
 	// inlined in this function on AE: 140816E40 - better example: 14083233B
 	NodeArray& wrap_to_conditional_2(NodeArray& a, const char* name, TreeCtors_extradata* extradata, CombatBehaviorTreeNode* node)
 	{
-		//VTABLE_CombatBehaviorTreeConditionalNode_CombatBehaviorExpression_CombatBehaviorMemberFunc_CombatBehaviorContextCloseMovement_bool__CombatBehaviorContextCloseMovement_____void____
-
-		// SkyrimSE.exe+7da060
-		return _generic_foo<46732, NodeArray&, NodeArray&, const char*, void*, CombatBehaviorTreeNode*>(a, name, extradata, node);
+		// use the the function we modified to imitate the 1.5.97 function
+		return _generic_foo<47845, NodeArray&, NodeArray&, const char*, void*, CombatBehaviorTreeNode*>(a, name, extradata, node);
 	}
 
 	// not used

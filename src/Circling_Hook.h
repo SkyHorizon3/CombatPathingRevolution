@@ -74,12 +74,12 @@ namespace CombatPathing
 		static float GetMinCircleAngle();
 
 		// 1-6-640-0 @ 0x8824E0
-		static constexpr std::uintptr_t AE_FuncID = 50648;
-		static constexpr std::ptrdiff_t AE_OffsetL = 0x4C;
-		static constexpr std::ptrdiff_t AE_OffsetH = 0x55;
+		static constexpr std::uintptr_t AE_FuncID = 50648;  //1408824E0
+		static constexpr std::ptrdiff_t AE_OffsetL = 0x4C;  //14088252C
+		static constexpr std::ptrdiff_t AE_OffsetH = 0x55;  //140882535
 		// 1-5-97-0 @ 0x8450A0
-		static constexpr std::uintptr_t SE_FuncID = 49721;
-		static constexpr std::ptrdiff_t SE_OffsetL = 0x3F;
+		static constexpr std::uintptr_t SE_FuncID = 49721;  //1408450A0
+		static constexpr std::ptrdiff_t SE_OffsetL = 0x3F;  //1408450DF
 		static constexpr std::ptrdiff_t SE_OffsetH = 0x47;
 
 		static constexpr Patch AE_Epilog{
@@ -165,7 +165,7 @@ namespace CombatPathing
 		{
 			SKSE::AllocTrampoline(1 << 4);
 
-			REL::Relocation<std::uintptr_t> WithinHeadingAngleBase{ REL::RelocationID(46720, 47916) };
+			REL::Relocation<std::uintptr_t> WithinHeadingAngleBase{ REL::RelocationID(46720, 47916) };  //AE: 1408158B0
 
 			auto& trampoline = SKSE::GetTrampoline();
 			_WithinHeadingAngle = trampoline.write_call<5>(WithinHeadingAngleBase.address() + REL::Relocate(0x366, 0x2F2), WithinHeadingAngle);

@@ -17,6 +17,7 @@ namespace CombatPathing
 		if (!a_radius || !a_target || !IsMeleeOnly(a_attacker))
 			return;
 
+		/*
 		DEBUG("Run AdvanceRadiusHook::RecalculateAdvanceRadius");
 		if (a_fullRadius) {
 			DEBUG("a_fullRadius: true");
@@ -27,6 +28,7 @@ namespace CombatPathing
 		DEBUG("a_delta: {}", a_delta);
 		DEBUG("target: {0:08X}", a_target->GetFormID());
 		DEBUG("a_attacker: {0:08X}", a_attacker->GetFormID());
+		*/
 
 		bool enableAdvanceRadius;
 		if (a_attacker->GetGraphVariableBool(ENABLE_RADIUS_GV, enableAdvanceRadius) && enableAdvanceRadius) {

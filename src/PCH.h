@@ -114,7 +114,7 @@ using Random = effolkronium::random_static;
 #include <xbyak/xbyak.h>
 
 using namespace std::literals;
-using namespace REL::literals;
+//using namespace REL::literals;
 
 // Version
 #include "Version.h"
@@ -126,7 +126,7 @@ template <int id, typename T, typename... Args>
 T _generic_foo(Args... args)
 {
 	using func_t = T(Args...);
-	REL::Relocation<func_t> func{ REL::ID(id) };
+	static REL::Relocation<func_t> func{ REL::ID(id) };
 	return func(std::forward<Args>(args)...);
 }
 

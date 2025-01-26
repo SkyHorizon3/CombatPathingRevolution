@@ -24,7 +24,6 @@ namespace CombatPathing
 		static inline REL::Relocation<decltype(GetFallbackDistance)> _GetFallbackDistance;
 	};
 
-	// TODO
 	class FallbackDistanceHook2
 	{
 		static float GetMaxFallbackDistance(RE::Actor* a_me, RE::Actor* a_he);

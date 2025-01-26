@@ -52,7 +52,6 @@ namespace CombatPathing
 
 	RE::NodeArray& AdvanceToCircleHook::PushBackNode(RE::NodeArray& a_master, RE::NodeArray& a_target)
 	{
-		/*
 		auto nodeCirlce = RE::NodeCloseMovementCircle::createnew();
 		if (nodeCirlce) {
 			NodeArray array;
@@ -60,9 +59,8 @@ namespace CombatPathing
 			extraData.func1 = ShouldCircle;
 			extraData.func2 = nullptr;
 
-			//a_master = pushback_parentof(a_master, wrap_to_conditional_2(array, "CPR Circle", &extraData, nodeCirlce));
+			a_master = pushback_parentof(a_master, wrap_to_conditional_2(array, "CPR Circle", &extraData, nodeCirlce));
 		}
-		*/
 
 		return _PushBackNode(a_master, a_target);
 	}
@@ -71,6 +69,9 @@ namespace CombatPathing
 	{
 		auto me = CombatAI__get_me();
 		auto he = CombatAI__get_he();
+
+		SKSE::log::info("Run ShouldCircle!!!! YESSSSSSSSSSSSSSSSS");
+
 		if (me && he) {
 			if (WithinCricleRange(me, he)) {
 				auto chance = GetCircleChance(me);

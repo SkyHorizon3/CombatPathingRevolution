@@ -50,8 +50,8 @@ namespace RE
 	//DECLARE_CombatBehaviorTreeNodeObject(CombatBehaviorReposition);  // 1416962C0
 	//using NodeCloseMovementReposition = CombatBehaviorTreeNodeObject_CombatBehaviorReposition_;
 
-	DECLARE_CombatBehaviorTreeNodeObject(CombatBehaviorBackoff);  // 141696580
-	using NodeCloseMovementBackoff = CombatBehaviorTreeNodeObject_CombatBehaviorBackoff_;
+	//DECLARE_CombatBehaviorTreeNodeObject(CombatBehaviorBackoff);  // 141696580
+	//using NodeCloseMovementBackoff = CombatBehaviorTreeNodeObject_CombatBehaviorBackoff_;
 
 	DECLARE_CombatBehaviorTreeNodeObject(CombatBehaviorCircle);  // 1416964D0
 	using NodeCloseMovementCircle = CombatBehaviorTreeNodeObject_CombatBehaviorCircle_;
