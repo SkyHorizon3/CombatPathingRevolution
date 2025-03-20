@@ -1,5 +1,6 @@
 #include "Circling_Hook.h"
 #include "RE/CombatBehaviorNodesMovement.h"
+#include "RE/CombatBehaviorTreeNode.h"
 #include "Util.h"
 
 namespace CombatPathing
@@ -59,7 +60,8 @@ namespace CombatPathing
 			extraData.func1 = ShouldCircle;
 			extraData.func2 = nullptr;
 
-			a_master = pushback_parentof(a_master, wrap_to_conditional_2(array, "CPR Circle", &extraData, nodeCirlce));
+			auto& arr = wrap_to_conditional_2(array, "CPR Circle", &ShouldCircle, nodeCirlce);
+			a_master = pushback_parentof(a_master, arr);
 		}
 
 		return _PushBackNode(a_master, a_target);
@@ -69,8 +71,6 @@ namespace CombatPathing
 	{
 		auto me = CombatAI__get_me();
 		auto he = CombatAI__get_he();
-
-		SKSE::log::info("Run ShouldCircle!!!! YESSSSSSSSSSSSSSSSS");
 
 		if (me && he) {
 			if (WithinCricleRange(me, he)) {

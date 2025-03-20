@@ -17,19 +17,6 @@ namespace CombatPathing
 		if (!a_radius || !a_target || !IsMeleeOnly(a_attacker))
 			return;
 
-		/*
-		DEBUG("Run AdvanceRadiusHook::RecalculateAdvanceRadius");
-		if (a_fullRadius) {
-			DEBUG("a_fullRadius: true");
-		} else {
-			DEBUG("a_fullRadius: false");
-		}
-		DEBUG("a_radius: {}", *a_radius);
-		DEBUG("a_delta: {}", a_delta);
-		DEBUG("target: {0:08X}", a_target->GetFormID());
-		DEBUG("a_attacker: {0:08X}", a_attacker->GetFormID());
-		*/
-
 		bool enableAdvanceRadius;
 		if (a_attacker->GetGraphVariableBool(ENABLE_RADIUS_GV, enableAdvanceRadius) && enableAdvanceRadius) {
 			float InnerMin, InnerMid, InnerMax, OuterMin, OuterMid, OuterMax;
@@ -38,11 +25,7 @@ namespace CombatPathing
 				auto& inner = a_radius[0];
 				auto& outer = a_radius[2];
 
-				DEBUG("AdvanceInterruptHook::Update - inner: {} - outer: {}", inner, outer);
-
 				if (a_fullRadius) {
-					DEBUG("AdvanceInterruptHook::Update after a_fullRadius");
-
 					inner = RescaleRadius(a_delta, InnerMin, InnerMid, InnerMax);
 					outer = RescaleRadius(a_delta, OuterMin, OuterMid, OuterMax);
 				} else {
@@ -55,8 +38,6 @@ namespace CombatPathing
 
 	void AdvanceInterruptHook::Update(char** context)
 	{
-		//DEBUG("Run AdvanceInterruptHook::Update");
-
 		static constexpr char INTERRUPT_ACTION_GV[] = "CPR_InterruptAction";
 		auto me = CombatAI__get_me();
 		if (me) {
@@ -64,13 +45,10 @@ namespace CombatPathing
 			if (me->GetGraphVariableBool(INTERRUPT_ACTION_GV, interruptAction) && interruptAction && me->GetGraphVariableBool(ENABLE_RADIUS_GV, enableAdvanceRadius) && enableAdvanceRadius) {
 				char* path = *context;
 				*(path + 0x14) = 5;
-
-				DEBUG("AdvanceInterruptHook::Update Run1");
 			}
 
 			if (interruptAction) {
 				me->SetGraphVariableBool(INTERRUPT_ACTION_GV, false);
-				DEBUG("AdvanceInterruptHook::Update Run2");
 			}
 		}
 

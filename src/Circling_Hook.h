@@ -13,7 +13,6 @@ namespace CombatPathing
 	public:
 		static void InstallHook()
 		{
-			SKSE::AllocTrampoline(1 << 4);
 			auto& trampoline = SKSE::GetTrampoline();
 
 			REL::Relocation<std::uintptr_t> Base{ REL::RelocationID(49720, 50647) };
@@ -34,7 +33,6 @@ namespace CombatPathing
 	public:
 		static void InstallHook()
 		{
-			SKSE::AllocTrampoline(1 << 4);
 			auto& trampoline = SKSE::GetTrampoline();
 
 			REL::Relocation<std::uintptr_t> Base{ REL::RelocationID(46731, 47928) };  //sub_1407D97D0 AE untested
@@ -55,7 +53,6 @@ namespace CombatPathing
 	public:
 		static void InstallHook()
 		{
-			SKSE::AllocTrampoline(1 << 4);
 			auto& trampoline = SKSE::GetTrampoline();
 
 			REL::Relocation<std::uintptr_t> Base{ REL::RelocationID(49721, 50648) };  //sub_1408450A0
@@ -105,8 +102,6 @@ namespace CombatPathing
 	public:
 		static void InstallHook()
 		{
-			SKSE::AllocTrampoline(1 << 6);
-
 			auto handle = DKUtil::Hook::AddCaveHook(
 				REL::RelocationID(SE_FuncID, AE_FuncID).address(),
 				REL::Relocate(std::make_pair(SE_OffsetL, SE_OffsetH), std::make_pair(AE_OffsetL, AE_OffsetH)),
@@ -142,8 +137,6 @@ namespace CombatPathing
 	public:
 		static void InstallHook()
 		{
-			SKSE::AllocTrampoline(1 << 6);
-
 			auto handle = DKUtil::Hook::AddCaveHook(
 				REL::RelocationID(SE_FuncID, AE_FuncID).address(),
 				REL::Relocate(std::make_pair(SE_OffsetL, SE_OffsetH), std::make_pair(AE_OffsetL, AE_OffsetH)),
@@ -163,8 +156,6 @@ namespace CombatPathing
 	public:
 		static void InstallHook()
 		{
-			SKSE::AllocTrampoline(1 << 4);
-
 			REL::Relocation<std::uintptr_t> WithinHeadingAngleBase{ REL::RelocationID(46720, 47916) };  //AE: 1408158B0
 
 			auto& trampoline = SKSE::GetTrampoline();

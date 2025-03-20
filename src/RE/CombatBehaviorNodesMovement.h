@@ -41,8 +41,8 @@ namespace RE
 	//DECLARE_CombatBehaviorTreeNodeObject(CombatBehaviorSurround);  // 141696160
 	//using NodeCloseMovementSurround = CombatBehaviorTreeNodeObject_CombatBehaviorSurround_;
 
-	//DECLARE_CombatBehaviorTreeNodeObject(CombatBehaviorAdvance);  // 1416960B0
-	//using NodeCloseMovementAdvance = CombatBehaviorTreeNodeObject_CombatBehaviorAdvance_;
+	DECLARE_CombatBehaviorTreeNodeObject(CombatBehaviorAdvance);  // 1416960B0
+	using NodeCloseMovementAdvance = CombatBehaviorTreeNodeObject_CombatBehaviorAdvance_;
 
 	//DECLARE_CombatBehaviorTreeNodeObject(CombatBehaviorFallbackToRanged);  // 141696000
 	//using NodeCloseMovementFallbackToRanged = CombatBehaviorTreeNodeObject_CombatBehaviorFallbackToRanged_;

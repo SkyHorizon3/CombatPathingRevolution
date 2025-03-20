@@ -44,6 +44,8 @@ DLLEXPORT bool SKSEAPI SKSEPlugin_Load(const SKSE::LoadInterface* a_skse)
 		return false;
 	}
 
+	SKSE::AllocTrampoline(450);
+
 	g_message->RegisterListener(CombatPathing::EventCallback);
 
 	return true;

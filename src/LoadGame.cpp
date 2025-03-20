@@ -12,12 +12,6 @@ namespace CombatPathing
 	void EventCallback(SKSE::MessagingInterface::Message* msg)
 	{
 		if (msg->type == SKSE::MessagingInterface::kPostLoad) {
-			PrepareFunc00::InstallHook();
-			PrepareFunc01::InstallHook();
-			PrepareFunc02::InstallHook();
-			PrepareFunc03::InstallHook();
-			//TestHook::Install();
-
 			AdvanceRadiusHook::InstallHook();
 			AdvanceInterruptHook::InstallHook();
 

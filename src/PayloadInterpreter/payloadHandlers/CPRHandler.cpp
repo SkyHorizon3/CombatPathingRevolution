@@ -57,11 +57,9 @@ void CPRHandler::enableAdvance(RE::Actor* a_actor, std::vector<std::string_view>
 
 	SetCPRVariables(a_actor, actionName, paramName, v);
 
-	/*
 	if (InterruptActiveAction<RE::NodeCloseMovementAdvance>(a_actor)) {
 		DEBUG("Interrupt NodeCloseMovementAdvance in actor :{}-{:x}", a_actor->GetName(), a_actor->GetFormID());
 	}
-	*/
 }
 
 void CPRHandler::enableBackoff(RE::Actor* a_actor, std::vector<std::string_view>* v)

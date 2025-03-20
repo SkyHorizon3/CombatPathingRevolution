@@ -51,8 +51,6 @@ namespace CombatPathing
 	public:
 		static void InstallHook()
 		{
-			SKSE::AllocTrampoline(static_cast<size_t>(1) << 7);
-
 			auto Hook_SetRadius = DKUtil::Hook::AddCaveHook(
 				DKUtil::Hook::IDToAbs(AE_FuncID, SE_FuncID),
 				{ RadiusL, RadiusH },

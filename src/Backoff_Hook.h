@@ -23,8 +23,6 @@ namespace CombatPathing
 	public:
 		static void InstallHook()
 		{
-			SKSE::AllocTrampoline(1 << 6);
-
 			auto funcAddr = REL::RelocationID(SE_FuncID, AE_FuncID).address();
 
 			Patch RelocatePointer{
@@ -43,25 +41,6 @@ namespace CombatPathing
 
 			INFO("{} Done!", __FUNCTION__);
 		}
-	};
-
-	class BackoffChanceHook
-	{
-	public:
-		static void InstallHook()
-		{
-			SKSE::AllocTrampoline(1 << 4);
-			auto& trampoline = SKSE::GetTrampoline();
-
-			REL::Relocation<std::uintptr_t> Base{ REL::RelocationID(46731, 47928) };                                      // SE: 1407D97D0, AE: 140816E40
-			_WrapToRandomNode = trampoline.write_call<5>(Base.address() + REL::Relocate(0xD7, 0x1F0), WrapToRandomNode);  // AE difficult
-			INFO("{} Done!", __FUNCTION__);
-		}
-
-	private:
-		static RE::NodeArray& WrapToRandomNode(RE::NodeArray& a_array, const char* a_name, RE::TreeCtors_extradata* a_extradata, RE::CombatBehaviorTreeNode* a_node);
-
-		static inline REL::Relocation<decltype(WrapToRandomNode)> _WrapToRandomNode;
 	};
 
 	class BackoffChanceHookAE : public Xbyak::CodeGenerator
@@ -108,9 +87,7 @@ namespace CombatPathing
 			auto trampolineJmp = TrampolineCall(target.address() + 0xCE, reinterpret_cast<std::uintptr_t>(thunk));
 
 			auto& trampoline = SKSE::GetTrampoline();
-			SKSE::AllocTrampoline(trampolineJmp.getSize());
 			auto result = trampoline.allocate(trampolineJmp);
-			SKSE::AllocTrampoline(14);
 			trampoline.write_branch<5>(target.address(), (std::uintptr_t)result);
 
 			INFO("{} Done!", __FUNCTION__);

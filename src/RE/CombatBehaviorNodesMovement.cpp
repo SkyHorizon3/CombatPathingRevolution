@@ -2,26 +2,6 @@
 
 namespace RE
 {
-	/*
-	static CombatBehaviorTreeCreateContextNode_CombatBehaviorContextCloseMovement_* RunCreate(char* a_mem)
-	{
-		return _generic_foo<47545, CombatBehaviorTreeCreateContextNode_CombatBehaviorContextCloseMovement_*>(a_mem);
-	}
-
-	CombatBehaviorTreeCreateContextNode_CombatBehaviorContextCloseMovement_* Test()
-	{
-		char* mem = (char*)RE::MemoryManager::GetSingleton()->Allocate(0x28, 0, 0);
-
-		if (mem) {
-			auto* tree = RunCreate(mem);
-
-			stl::emplace_vtable<CombatBehaviorTreeCreateContextNode_CombatBehaviorContextCloseMovement_>(tree);
-
-			return tree;
-		}
-	}
-	*/
-
 	//DEFINE_CombatBehaviorTree_XXX__createnew(46753, CombatBehaviorTreeCreateContextNode_CombatBehaviorContextCloseMovement_);
 	//DEFINE_CombatBehaviorTreeNodeObject_createnew(CombatBehaviorFallback, 46762);
 	//DEFINE_CombatBehaviorTreeNodeObject_createnew(CombatBehaviorBackoff, 46759);

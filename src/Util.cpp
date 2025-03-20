@@ -76,18 +76,41 @@ namespace CombatPathing
 		return _generic_foo<46736, NodeArray&, NodeArray&, const char*, TreeCtors_extradata*, CombatBehaviorTreeNode*>(a, name, extradata, node);
 	}
 
-	// used
-	// inlined in this function on AE: 140816E40 - better example: 14083233B
-	NodeArray& wrap_to_conditional_2(NodeArray& a, const char* name, TreeCtors_extradata* extradata, CombatBehaviorTreeNode* node)
+	NodeArray& AddNode(NodeArray& arr, const char* name, CombatBehaviorTreeNode* node)
 	{
-		// use the the function we modified to imitate the 1.5.97 function
-		return _generic_foo<47845, NodeArray&, NodeArray&, const char*, void*, CombatBehaviorTreeNode*>(a, name, extradata, node);
+		using func_t = decltype(&AddNode);
+		static REL::Relocation<func_t> func{ RELOCATION_ID(46261, 47516) };
+		return func(arr, name, node);
 	}
 
-	// not used
-	NodeArray& init_withNode_withname(NodeArray& array, const char* name, CombatBehaviorTreeNode* node)
+	void AddChild(CombatBehaviorTreeConditionalNodeImpl* impl, CombatBehaviorTreeNode* node)
 	{
-		return _generic_foo<46261, NodeArray&, NodeArray&, const char*, CombatBehaviorTreeNode*>(array, name, node);
+		using func_t = decltype(&AddChild);
+		REL::Relocation<func_t> func{ RELOCATION_ID(46304, 47548) };
+		return func(impl, node);
+	}
+
+	// used
+	// inlined in this function on AE: 140816E40 - better example: 14083233B
+	NodeArray& wrap_to_conditional_2(NodeArray& a, const char* name, void* extradata, CombatBehaviorTreeNode* node)
+	{
+		// use the the function we modified to imitate the 1.5.97 function - was the first plan, changed it to a REed implementation
+		//return _generic_foo<47845, NodeArray&, NodeArray&, const char*, void*, CombatBehaviorTreeNode*>(a, name, extradata, node);
+
+		auto condNode = RE::CombatBehaviorTreeConditionalNodeImpl::Create();
+		if (condNode) {
+			condNode->expr = extradata;
+			condNode->isSelector = 1;
+
+			char DstBuf[260];
+			sprintf_s(DstBuf, 260, "ConditionalNode - %s", name);
+			condNode->name = RE::BSFixedString(DstBuf);
+			AddChild(condNode, node);
+
+			return AddNode(a, name, node);
+		}
+
+		return a;
 	}
 
 	//used

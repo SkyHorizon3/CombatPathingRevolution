@@ -10,7 +10,6 @@ namespace CombatPathing
 	public:
 		static void InstallHook()
 		{
-			SKSE::AllocTrampoline(1 << 4);
 			auto& trampoline = SKSE::GetTrampoline();
 
 			REL::Relocation<std::uintptr_t> Base{ REL::RelocationID(46712, 47908) };  // 7D73D0, 8149B0
@@ -46,8 +45,6 @@ namespace CombatPathing
 	public:
 		static void InstallHook()
 		{
-			SKSE::AllocTrampoline(1 << 6);
-
 			auto funcAddr = REL::RelocationID(SE_FuncID, AE_FuncID).address();
 			Patch RelocatePointer{
 				AsPointer(funcAddr + REL::Relocate(SE_OffsetL, AE_OffsetL) + 0x10),  //7D7996
@@ -73,7 +70,6 @@ namespace CombatPathing
 	public:
 		static void InstallHook()
 		{
-			SKSE::AllocTrampoline(1 << 4);
 			auto& trampoline = SKSE::GetTrampoline();
 
 			REL::Relocation<std::uintptr_t> Base{ REL::RelocationID(46713, 47909) };  //sub_1407D7740
@@ -108,8 +104,6 @@ namespace CombatPathing
 	public:
 		static void InstallHook()
 		{
-			SKSE::AllocTrampoline(1 << 6);
-
 			auto funcAddr = REL::RelocationID(SE_FuncID, AE_FuncID).address();
 			Patch RelocatePointer{
 				AsPointer(funcAddr + REL::Relocate(0x256, 0x2F7)),  //7D7996

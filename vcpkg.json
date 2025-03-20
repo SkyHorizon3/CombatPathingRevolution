@@ -14,7 +14,13 @@
     "directxtk",
     "catch2"
   ],
-  "builtin-baseline": "80d54ff62d528339c626a6fbc3489a7f25956ade",
+  "builtin-baseline": "cd1099f42a3c2ee28dc68e3db3f6f88658982736",
+  "overrides": [
+    {
+      "name": "xbyak",
+      "version": "7.23.1"
+    }
+  ],
   "features": {
     "mo2-install": {
       "description": "Combat Pathing Revolution"

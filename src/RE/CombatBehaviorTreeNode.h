@@ -67,6 +67,35 @@ namespace RE
 	};
 	static_assert(sizeof(CombatBehaviorTreeNode) == 0x28);
 
+	class CombatBehaviorTreeConditionalNodeImpl : public CombatBehaviorTreeNode
+	{
+	public:
+		~CombatBehaviorTreeConditionalNodeImpl() = default;
+
+		static CombatBehaviorTreeConditionalNodeImpl* Create()
+		{
+			auto node = malloc<CombatBehaviorTreeConditionalNodeImpl>();
+			std::memset(reinterpret_cast<void*>(node), 0, sizeof(CombatBehaviorTreeConditionalNodeImpl));
+			node->ctor();
+
+			*(uint64_t*)node = REL::VariantID(266106, 212791, 0x1719760).address();  // set vtable
+
+			return node;
+		}
+
+		CombatBehaviorTreeConditionalNodeImpl* ctor()
+		{
+			using func_t = decltype(&CombatBehaviorTreeConditionalNodeImpl::ctor);
+			static REL::Relocation<func_t> func{ RELOCATION_ID(46301, 47545) };
+			return func(this);
+		}
+
+		// members
+		void* expr;
+		bool isSelector;
+	};
+	static_assert(sizeof(CombatBehaviorTreeConditionalNodeImpl) == 0x38);
+
 #define DECLARE_CombatBehaviorTreeNodeObjectBase(T)                                                 \
 	class CombatBehaviorTreeNodeObjectBase_##T##_ : public CombatBehaviorTreeNode                   \
 	{                                                                                               \
