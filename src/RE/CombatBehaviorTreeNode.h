@@ -29,34 +29,12 @@ namespace RE
 		virtual bool __unk_8(CombatBehaviorTreeControl* control);
 		virtual RE::BSFixedString* __unk_9();
 
-		/*
-		void init_childrens_parents(NodeArray& cont_node)
+		void AddChild(CombatBehaviorTreeNode* node)
 		{
-			return _generic_foo<46305, void, CombatBehaviorTreeNode*, NodeArray&>(this, cont_node);
+			using func_t = decltype(&AddChild);
+			static REL::Relocation<func_t> func{ RELOCATION_ID(46304, 47548) };
+			return func(this, node);
 		}
-
-		CombatBehaviorTreeNode* add_FirstChildren(CombatBehaviorTreeNode* child)
-		{
-			_generic_foo<46304, void, CombatBehaviorTreeNode*, CombatBehaviorTreeNode*>(this, child);
-			return child;
-		}
-
-		CombatBehaviorTreeNode* set_name(const char* _name)
-		{
-			name = _name;
-			return this;
-		}
-
-		void ctor_nonvirtual()
-		{
-			return _generic_foo<46301, void, CombatBehaviorTreeNode*>(this);  // SkyrimSE.exe+7C8C10
-		}
-
-		void dtor_nonvirtual()
-		{
-			return _generic_foo<46302, void, CombatBehaviorTreeNode*>(this);  // SkyrimSE.exe+7c8c40
-		}
-		*/
 
 		// members
 		RE::BSFixedString name;
@@ -64,6 +42,14 @@ namespace RE
 		CombatBehaviorTreeNode** childs;
 		int childs_count;
 		char __pad_24[4];
+
+	protected:
+		CombatBehaviorTreeNode* Ctor()
+		{
+			using func_t = decltype(&CombatBehaviorTreeNode::Ctor);
+			static REL::Relocation<func_t> func{ RELOCATION_ID(46301, 47545) };
+			return func(this);
+		}
 	};
 	static_assert(sizeof(CombatBehaviorTreeNode) == 0x28);
 
@@ -75,19 +61,14 @@ namespace RE
 		static CombatBehaviorTreeConditionalNodeImpl* Create()
 		{
 			auto node = malloc<CombatBehaviorTreeConditionalNodeImpl>();
-			std::memset(reinterpret_cast<void*>(node), 0, sizeof(CombatBehaviorTreeConditionalNodeImpl));
-			node->ctor();
+			std::memset(node, 0, sizeof(CombatBehaviorTreeConditionalNodeImpl));
+			if (node) {
+				node->Ctor();
 
-			*(uint64_t*)node = REL::VariantID(266106, 212791, 0x1719760).address();  // set vtable
+				*(uint64_t*)node = VTABLE_CombatBehaviorTreeConditionalNode_CombatBehaviorExpression_CombatBehaviorMemberFunc_CombatBehaviorContextCloseMovement_bool__CombatBehaviorContextCloseMovement_____void____[0].address();  // set vtable
+			}
 
 			return node;
-		}
-
-		CombatBehaviorTreeConditionalNodeImpl* ctor()
-		{
-			using func_t = decltype(&CombatBehaviorTreeConditionalNodeImpl::ctor);
-			static REL::Relocation<func_t> func{ RELOCATION_ID(46301, 47545) };
-			return func(this);
 		}
 
 		// members

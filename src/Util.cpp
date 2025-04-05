@@ -69,25 +69,11 @@ namespace CombatPathing
 		return a_min + a_mult * (a_max - a_min);
 	}
 
-	// not used
-	NodeArray& wrap_to_valuenode_13(NodeArray& a, const char* name, TreeCtors_extradata* extradata, CombatBehaviorTreeNode* node)
-	{
-		// 1407DA290
-		return _generic_foo<46736, NodeArray&, NodeArray&, const char*, TreeCtors_extradata*, CombatBehaviorTreeNode*>(a, name, extradata, node);
-	}
-
 	NodeArray& AddNode(NodeArray& arr, const char* name, CombatBehaviorTreeNode* node)
 	{
 		using func_t = decltype(&AddNode);
 		static REL::Relocation<func_t> func{ RELOCATION_ID(46261, 47516) };
 		return func(arr, name, node);
-	}
-
-	void AddChild(CombatBehaviorTreeConditionalNodeImpl* impl, CombatBehaviorTreeNode* node)
-	{
-		using func_t = decltype(&AddChild);
-		REL::Relocation<func_t> func{ RELOCATION_ID(46304, 47548) };
-		return func(impl, node);
 	}
 
 	// used
@@ -100,12 +86,12 @@ namespace CombatPathing
 		auto condNode = RE::CombatBehaviorTreeConditionalNodeImpl::Create();
 		if (condNode) {
 			condNode->expr = extradata;
-			condNode->isSelector = 1;
+			condNode->isSelector = true;
 
 			char DstBuf[260];
 			sprintf_s(DstBuf, 260, "ConditionalNode - %s", name);
 			condNode->name = RE::BSFixedString(DstBuf);
-			AddChild(condNode, node);
+			condNode->AddChild(node);
 
 			return AddNode(a, name, node);
 		}

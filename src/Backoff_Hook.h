@@ -78,12 +78,11 @@ namespace CombatPathing
 
 		static void InstallHook()
 		{
-			constexpr auto targetAddress = REL::ID(47928);
-			// +0x10F -> 140817030
+			REL::Relocation<std::uintptr_t> target{ REL::ID(47928), 0x127 };
 
-			REL::safe_fill(targetAddress.address() + 0x127, REL::NOP, 0x7);
+			REL::safe_fill(target.address(), REL::NOP, 0x7);
 
-			REL::Relocation<std::uintptr_t> target{ targetAddress, 0x127 };
+			// jump with the return over inlined code that should not be executed since we replaced it with our thunk
 			auto trampolineJmp = TrampolineCall(target.address() + 0xCE, reinterpret_cast<std::uintptr_t>(thunk));
 
 			auto& trampoline = SKSE::GetTrampoline();

@@ -56,9 +56,6 @@ namespace CombatPathing
 		auto nodeCirlce = RE::NodeCloseMovementCircle::createnew();
 		if (nodeCirlce) {
 			NodeArray array;
-			RE::TreeCtors_extradata extraData;
-			extraData.func1 = ShouldCircle;
-			extraData.func2 = nullptr;
 
 			auto& arr = wrap_to_conditional_2(array, "CPR Circle", &ShouldCircle, nodeCirlce);
 			a_master = pushback_parentof(a_master, arr);

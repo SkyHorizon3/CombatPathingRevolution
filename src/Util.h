@@ -15,13 +15,11 @@ namespace CombatPathing
 
 	const float RescaleValue(float a_mult, float a_min, float a_max);
 
-	NodeArray& wrap_to_valuenode_13(NodeArray& a, const char* name, TreeCtors_extradata* extradata, CombatBehaviorTreeNode* node);
-
 	NodeArray& wrap_to_conditional_2(NodeArray& a, const char* name, void* extradata, CombatBehaviorTreeNode* node);
 
 	NodeArray& pushback_parentof(NodeArray& array, NodeArray& cont_node);
 
-	Character* CombatAI__get_he();
+	Character* CombatAI__get_he();  // probably Actor not Character, anyway
 
 	Character* CombatAI__get_me();
 
