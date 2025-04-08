@@ -31,7 +31,7 @@ namespace RE
 
 		void AddChild(CombatBehaviorTreeNode* node)
 		{
-			using func_t = decltype(&AddChild);
+			using func_t = decltype(&CombatBehaviorTreeNode::AddChild);
 			static REL::Relocation<func_t> func{ RELOCATION_ID(46304, 47548) };
 			return func(this, node);
 		}
