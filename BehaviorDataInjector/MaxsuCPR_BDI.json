@@ -4,6 +4,12 @@
         "type": "kEvent",
         "name": "CPR"
     },
+    {
+        "projectPath": "Actors",
+        "type": "kBool",
+        "name": "CPR_InterruptAction",
+        "value": false
+    },
 
     {
         "projectPath": "Actors",
@@ -96,6 +102,12 @@
         "type": "kFloat",
         "name": "CPR_CirclingAngleMax",
         "value": 90
+    },
+    {
+        "projectPath": "Actors",
+        "type": "kFloat",
+        "name": "CPR_CirclingViewConeAngle",
+        "value": 360
     },
 
     {
