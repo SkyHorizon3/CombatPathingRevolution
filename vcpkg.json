@@ -10,8 +10,7 @@
         "xbyak"
       ]
     },
-    "spdlog",
-    "nlohmann-json"
+    "spdlog"
   ],
   "builtin-baseline": "00c5775211f45cd08b37fce0484b4cb940e422ab"
 }

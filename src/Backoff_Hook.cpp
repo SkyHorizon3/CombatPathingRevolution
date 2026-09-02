@@ -18,12 +18,10 @@ namespace CombatPathing
 		return BackoffMinDistMultSettings ? BackoffMinDistMultSettings->GetFloat() : 0.75f;
 	}
 
-	void BackoffChanceHookAE::thunk(RE::NodeArray& a_array, RE::CombatBehaviorTreeNode* a_node)
+	void BackoffChanceHookAE::thunk(RE::CombatBehaviorTree::TreeBuilder* a_array, RE::CombatBehaviorTreeNode* a_node)
 	{
-		static auto RecalculateBackoffChance = +[](RE::Actor* a_actor) -> float {
-			//SKSE::log::info("Hawk tuah run that thing!!!");
-
-			bool enablebackoff;
+		static auto RecalculateBackoffChance = +[](RE::Actor* a_actor, RE::Actor*) -> float {
+			bool enablebackoff = false;
 			if (a_actor && a_actor->GetGraphVariableBool(ENABLE_BACKOFF_GV, enablebackoff) && enablebackoff) {
 				float backoffChance;
 				if (a_actor->GetGraphVariableFloat(BACKOFF_CHANCE_GV, backoffChance))
@@ -34,10 +32,7 @@ namespace CombatPathing
 			return BackoffChanceSettings ? BackoffChanceSettings->GetFloat() : 0.25f;
 		};
 
-		RE::TreeCtors_extradata extraData;
-		extraData.func1 = RecalculateBackoffChance;
-		extraData.func2 = nullptr;
-
-		a_array = WrapToRandomNode(a_array, "Backoff", &extraData, a_node);
+		Function chanceFunction{ RecalculateBackoffChance };
+		a_array = AddRandomNode(a_array, "Backoff", chanceFunction, a_node);
 	}
 }

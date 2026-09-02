@@ -81,27 +81,30 @@ namespace CombatPathing
 		static void InstallHook()
 		{
 			REL::Relocation<std::uintptr_t> target{ REL::ID(47928), 0x127 };
-
-			REL::safe_fill(target.address(), REL::NOP, 0x7);
+			REL::WriteSafeFill(target.address(), REL::NOP, 0x7);
 
 			// jump with the return over inlined code that should not be executed since we replaced it with our thunk
 			auto trampolineJmp = TrampolineCall(target.address() + 0xCE, reinterpret_cast<std::uintptr_t>(thunk));
+			auto& trampoline = REL::GetTrampoline();
+			trampoline.write_jmp<5>(target.address(), trampoline.allocate(trampolineJmp));
 
-			auto& trampoline = SKSE::GetTrampoline();
-			auto result = trampoline.allocate(trampolineJmp);
-			trampoline.write_branch<5>(target.address(), (std::uintptr_t)result);
-
-			INFO("{} Done!", __FUNCTION__);
+			REX::INFO("{} Done!", __FUNCTION__);
 		}
 
 	private:
-		static RE::NodeArray& WrapToRandomNode(RE::NodeArray& a_array, const char* a_name, RE::TreeCtors_extradata* a_extradata, RE::CombatBehaviorTreeNode* a_node)
+		struct Function  // just simulate the 500 templates Bethesda used here, REing this would be a lifetime task
 		{
-			using func_t = decltype(&WrapToRandomNode);
+			float (*function)(RE::Actor*, RE::Actor*);
+		};
+
+		// CombatBehaviorTree::AddRandomNode<CombatBehaviorExpression<CombatBehaviorFunc2<float (*)(Actor *,Actor *),CombatBehaviorTree::CombatBehaviorAttacker,CombatBehaviorTree::CombatBehaviorTarget>>>
+		static RE::CombatBehaviorTree::TreeBuilder* AddRandomNode(RE::CombatBehaviorTree::TreeBuilder* a_out, const char* a_name, const Function& a_chance, RE::CombatBehaviorTreeNode* a_node)
+		{
+			using func_t = decltype(&AddRandomNode);
 			static REL::Relocation<func_t> func{ REL::ID(47845) };
-			return func(a_array, a_name, a_extradata, a_node);
+			return func(a_out, a_name, a_chance, a_node);
 		}
 
-		static void thunk(RE::NodeArray& a_array, RE::CombatBehaviorTreeNode* a_node);
+		static void thunk(RE::CombatBehaviorTree::TreeBuilder* a_array, RE::CombatBehaviorTreeNode* a_node);
 	};
 }
