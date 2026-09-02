@@ -1,11 +1,9 @@
-#include "LoadGame.h"
 #include "Advance_Hook.h"
 #include "Backoff_Hook.h"
 #include "Circling_Hook.h"
 #include "Fallback_Hook.h"
-#include "PayloadInterpreter/hooks.h"
 #include "Settings.h"
-#include "Util.h"
+#include "hooks.h"
 
 namespace CombatPathing
 {

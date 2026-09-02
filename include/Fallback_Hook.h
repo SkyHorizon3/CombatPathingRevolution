@@ -10,7 +10,7 @@ namespace CombatPathing
 	public:
 		static void InstallHook()
 		{
-			auto& trampoline = SKSE::GetTrampoline();
+			auto& trampoline = REL::GetTrampoline();
 
 			REL::Relocation<std::uintptr_t> Base{ REL::RelocationID(46712, 47908) };  // 7D73D0, 8149B0
 			_GetFallbackDistance = trampoline.write_call<5>(Base.address() + REL::Relocate(0x1EB, 0x1B0), GetFallbackDistance);

@@ -7,7 +7,7 @@ namespace CombatPathing
 
 	float BackoffStartHook::RescaleBackoffMinDistanceMult(RE::Actor* a_actor, RE::Actor*)
 	{
-		bool enablebackoff;
+		bool enablebackoff = false;
 		if (a_actor && a_actor->GetGraphVariableBool(ENABLE_BACKOFF_GV, enablebackoff) && enablebackoff) {
 			float backoffMult;
 			if (a_actor->GetGraphVariableFloat(BACKOFF_MULT_GV, backoffMult))

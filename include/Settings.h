@@ -1,6 +1,4 @@
 #pragma once
-#include "DKUtil/Config.hpp"
-#include "DKUtil/Utility.hpp"
 
 namespace CombatPathing
 {

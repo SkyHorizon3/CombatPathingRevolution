@@ -2,16 +2,14 @@
 
 namespace CombatPathing
 {
-	using namespace RE;
-
-	bool IsMeleeOnly(Actor* a_actor)
+	bool IsMeleeOnly(RE::Actor* a_actor)
 	{
-		using TYPE = CombatInventoryItem::TYPE;
+		using TYPE = RE::CombatInventoryItem::TYPE;
 
 		if (!a_actor)
 			return false;
 
-		auto combatCtrl = a_actor->GetActorRuntimeData().combatController;
+		auto combatCtrl = a_actor->combatController;
 		auto CombatInv = combatCtrl ? combatCtrl->inventory : nullptr;
 		if (CombatInv) {
 			for (const auto item : CombatInv->equippedItems) {
@@ -104,17 +102,4 @@ namespace CombatPathing
 	{
 		return _generic_foo<47510, NodeArray&, NodeArray&, NodeArray&>(array, cont_node);
 	}
-
-	// used
-	Character* CombatAI__get_he()
-	{
-		return _generic_foo<47520, Character*>();  // SkyrimSE.exe+7c7b20
-	}
-
-	//used
-	Character* CombatAI__get_me()
-	{
-		return _generic_foo<47519, Character*>();  // SkyrimSE.exe+7C7A40
-	}
-
 }

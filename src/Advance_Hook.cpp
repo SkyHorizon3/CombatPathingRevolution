@@ -3,15 +3,12 @@
 
 namespace CombatPathing
 {
-	static constexpr char ENABLE_RADIUS_GV[] = "CPR_EnableAdvanceRadius",
-						  INNER_MIN_GV[] = "CPR_InnerRadiusMin", INNER_MID_GV[] = "CPR_InnerRadiusMid", INNER_MAX_GV[] = "CPR_InnerRadiusMax",
-						  OUTER_MIN_GV[] = "CPR_OuterRadiusMin", OUTER_MID_GV[] = "CPR_OuterRadiusMid", OUTER_MAX_GV[] = "CPR_OuterRadiusMax";
-
-	static inline const float RescaleRadius(float a_delta, float min, float mid, float max)
+	float AdvanceRadiusHook::RescaleRadius(float a_delta, float min, float mid, float max)
 	{
 		return a_delta <= 0.0 ? min + (mid - min) * (a_delta + 1.0) : mid + (max - mid) * a_delta;
 	}
 
+	// TODO: verify and test
 	void AdvanceRadiusHook::RecalculateAdvanceRadius(bool a_fullRadius, float* a_radius, float a_delta, RE::Actor* a_target, RE::Actor* a_attacker)
 	{
 		if (!a_radius || !a_target || !IsMeleeOnly(a_attacker))
@@ -36,19 +33,21 @@ namespace CombatPathing
 		}
 	}
 
-	void AdvanceInterruptHook::Update(char** context)
+	// TODO: verify and test
+	void AdvanceInterruptHook::Update(RE::CombatBehaviorAdvance* context)
 	{
-		static constexpr char INTERRUPT_ACTION_GV[] = "CPR_InterruptAction";
-		auto me = CombatAI__get_me();
-		if (me) {
+		auto attacker = RE::CombatBehaviorTree::GetAttacker();  // get_me
+		if (attacker && context) {
 			bool enableAdvanceRadius = false, interruptAction = false;
-			if (me->GetGraphVariableBool(INTERRUPT_ACTION_GV, interruptAction) && interruptAction && me->GetGraphVariableBool(ENABLE_RADIUS_GV, enableAdvanceRadius) && enableAdvanceRadius) {
-				char* path = *context;
-				*(path + 0x14) = 5;
+			if (attacker->GetGraphVariableBool(INTERRUPT_ACTION_GV, interruptAction) && interruptAction && attacker->GetGraphVariableBool(ENABLE_RADIUS_GV, enableAdvanceRadius) && enableAdvanceRadius) {
+				auto combatPath = context->path.get();
+				if (combatPath) {
+					combatPath->state = RE::CombatPath::STATE::kFailed;
+				}
 			}
 
 			if (interruptAction) {
-				me->SetGraphVariableBool(INTERRUPT_ACTION_GV, false);
+				attacker->SetGraphVariableBool(INTERRUPT_ACTION_GV, false);
 			}
 		}
 

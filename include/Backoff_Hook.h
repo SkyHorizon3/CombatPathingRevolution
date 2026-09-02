@@ -1,45 +1,47 @@
 #pragma once
 
-#include "DKUtil/Hook.hpp"
-#include "RE/CombatBehaviorTreeNode.h"
-
 namespace CombatPathing
 {
-	using namespace DKUtil::Alias;
-
 	class BackoffStartHook
 	{
 		static float RescaleBackoffMinDistanceMult(RE::Actor* a_me, RE::Actor* a_he);
 
-		// 1-6-640-0 @ 0x816350
-		static constexpr std::uintptr_t AE_FuncID = 47920;   // 140816350
-		static constexpr std::ptrdiff_t AE_OffsetL = 0x1BE;  // 14081650E
-		static constexpr std::ptrdiff_t AE_OffsetH = 0x1C6;  // 140816516
-		// 1-5-97-0 @ 0x7D8C90
-		static constexpr std::uintptr_t SE_FuncID = 46724;   // 1407D8C90
-		static constexpr std::ptrdiff_t SE_OffsetL = 0x201;  // 1407D8E91
-		static constexpr std::ptrdiff_t SE_OffsetH = 0x209;  // 1407D8E99
+		struct Patch : Xbyak::CodeGenerator
+		{
+			Patch(std::uintptr_t retn, std::uintptr_t func)
+			{
+				Xbyak::Label funcLabel;
+				Xbyak::Label retnLabel;
+
+				// don't execute original code, we return our float in xmm0
+				// rcx, rdx still populated with Actor*
+
+				sub(rsp, 0x20);
+				call(ptr[rip + funcLabel]);  //call thunk
+				add(rsp, 0x20);
+
+				jmp(ptr[rip + retnLabel]);  //jump back to original code
+
+				L(funcLabel);
+				dq(func);
+
+				L(retnLabel);
+				dq(retn);
+			}
+		};
 
 	public:
 		static void InstallHook()
 		{
-			auto funcAddr = REL::RelocationID(SE_FuncID, AE_FuncID).address();
+			// checked: 1.6.1170, 1.7.99
+			REL::Relocation<std::uintptr_t> target{ REL::ID(47920), 0x1BE };
+			REL::WriteSafeFill(target.address(), REL::NOP, 0x8);
 
-			Patch RelocatePointer{
-				AsPointer(funcAddr + REL::Relocate(0x1B1, 0x173)),  //SE: 1407D8E41, AE: 1408164C3
-				6
-			};
+			auto trampolineJmp = Patch(target.address() + 0x8, REX::UNRESTRICTED_CAST<std::uintptr_t>(RescaleBackoffMinDistanceMult));
+			auto& trampoline = REL::GetTrampoline();
+			trampoline.write_jmp<5>(target.address(), trampoline.allocate(trampolineJmp));
 
-			auto handle = DKUtil::Hook::AddCaveHook(
-				funcAddr,
-				{ AE_OffsetL, AE_OffsetH },
-				FUNC_INFO(RescaleBackoffMinDistanceMult),
-				&RelocatePointer,
-				nullptr);
-
-			handle->Enable();
-
-			INFO("{} Done!", __FUNCTION__);
+			REX::INFO("{} Done!", __FUNCTION__);
 		}
 	};
 
