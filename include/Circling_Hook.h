@@ -1,24 +1,20 @@
 #pragma once
-#include "DKUtil/Hook.hpp"
-#include "RE/CombatBehaviorTreeControl.h"
-#include "RE/CombatBehaviorTreeNode.h"
 
 namespace CombatPathing
 {
-	using namespace DKUtil::Alias;
-
 	//Disable circling when the combat target not within circling distance range.
 	class CirclingChanceHook
 	{
 	public:
 		static void InstallHook()
 		{
-			auto& trampoline = SKSE::GetTrampoline();
+			// checked: 1.6.1170, 1.7.99
+			REL::Relocation<std::uintptr_t> Base{ REL::ID(50647) };
 
-			REL::Relocation<std::uintptr_t> Base{ REL::RelocationID(49720, 50647) };
+			auto& trampoline = REL::GetTrampoline();
+			_GetCirclingChance = trampoline.write_jmp<5>(Base.address() + 0x22, GetCirclingChance);
 
-			_GetCirclingChance = trampoline.write_branch<5>(Base.address() + 0x22, GetCirclingChance);
-			INFO("{} Done!", __FUNCTION__);
+			REX::INFO("{} Done!", __FUNCTION__);
 		}
 
 	private:
@@ -33,15 +29,24 @@ namespace CombatPathing
 	public:
 		static void InstallHook()
 		{
-			auto& trampoline = SKSE::GetTrampoline();
+			// checked: 1.6.1170, 1.7.99
+			REL::Relocation<std::uintptr_t> Base{ REL::ID(47928) };
 
-			REL::Relocation<std::uintptr_t> Base{ REL::RelocationID(46731, 47928) };  //sub_1407D97D0 AE untested
-			_PushBackNode = trampoline.write_call<5>(Base.address() + REL::Relocate(0x493, 0xE1C), PushBackNode);
-			INFO("{} Done!", __FUNCTION__);
+			auto& trampoline = REL::GetTrampoline();
+			_PushBackNode = trampoline.write_call<5>(Base.address() + 0xE1C, PushBackNode);
+
+			REX::INFO("{} Done!", __FUNCTION__);
 		}
 
 	private:
-		static RE::NodeArray& PushBackNode(RE::NodeArray& a_master, RE::NodeArray& a_target);
+		static RE::CombatBehaviorTree::TreeBuilder* PushBackNode(RE::CombatBehaviorTree::TreeBuilder* a_master, RE::CombatBehaviorTree::TreeBuilder* a_target);
+
+		static float GetCircleChance(RE::Actor* a_actor)
+		{
+			using func_t = decltype(&AdvanceToCircleHook::GetCircleChance);
+			static REL::Relocation<func_t> func{ REL::ID(50647) };
+			return func(a_actor);
+		}
 
 		static inline REL::Relocation<decltype(PushBackNode)> _PushBackNode;
 
@@ -53,11 +58,12 @@ namespace CombatPathing
 	public:
 		static void InstallHook()
 		{
-			auto& trampoline = SKSE::GetTrampoline();
+			auto& trampoline = REL::GetTrampoline();
 
-			REL::Relocation<std::uintptr_t> Base{ REL::RelocationID(49721, 50648) };  //sub_1408450A0
-			_RescaleCircleAngle = trampoline.write_call<5>(Base.address() + REL::Relocate(0x3A, 0x44), RescaleCircleAngle);
-			INFO("{} Done!", __FUNCTION__);
+			// checked: 1.6.1170, 1.7.99
+			REL::Relocation<std::uintptr_t> Base{ REL::ID(50648) };
+			_RescaleCircleAngle = trampoline.write_call<5>(Base.address() + 0x44, RescaleCircleAngle);
+			REX::INFO("{} Done!", __FUNCTION__);
 		}
 
 	private:
@@ -70,49 +76,41 @@ namespace CombatPathing
 	{
 		static float GetMinCircleAngle();
 
-		// 1-6-640-0 @ 0x8824E0
-		static constexpr std::uintptr_t AE_FuncID = 50648;  //1408824E0
-		static constexpr std::ptrdiff_t AE_OffsetL = 0x4C;  //14088252C
-		static constexpr std::ptrdiff_t AE_OffsetH = 0x55;  //140882535
-		// 1-5-97-0 @ 0x8450A0
-		static constexpr std::uintptr_t SE_FuncID = 49721;  //1408450A0
-		static constexpr std::ptrdiff_t SE_OffsetL = 0x3F;  //1408450DF
-		static constexpr std::ptrdiff_t SE_OffsetH = 0x47;
+		struct Patch : Xbyak::CodeGenerator
+		{
+			Patch(std::uintptr_t retn, std::uintptr_t func)
+			{
+				Xbyak::Label funcLabel;
+				Xbyak::Label retnLabel;
 
-		static constexpr Patch AE_Epilog{
-			"\xF3\x44\x0F\x10\xC0",  // movss xmm8, xmm0
-			5
-		};
+				sub(rsp, 0x20);
+				call(ptr[rip + funcLabel]);  //call thunk
+				add(rsp, 0x20);
 
-		static constexpr Patch SE_Prolog{
-			"\x9C"                   // pushf
-			"\x48\x83\xEC\x10"       // sub rsp, 0x10
-			"\xF3\x0F\x7F\x04\x24",  // push xmm0
-			10
-		};
+				movss(xmm8, xmm0);
 
-		static constexpr Patch SE_Epilog{
-			"\xF3\x0F\x6F\x34\x24"  // pop xmm6 < xmm0
-			"\x48\x83\xC4\x10"      // add rsp, 0x10
-			"\x9D"                  // popf
-			"\xF3\x0F\x10\xF8",     //movss xmm7, xmm0
-			14
+				jmp(ptr[rip + retnLabel]);  //jump back to original code
+
+				L(funcLabel);
+				dq(func);
+
+				L(retnLabel);
+				dq(retn);
+			}
 		};
 
 	public:
 		static void InstallHook()
 		{
-			auto handle = DKUtil::Hook::AddCaveHook(
-				REL::RelocationID(SE_FuncID, AE_FuncID).address(),
-				REL::Relocate(std::make_pair(SE_OffsetL, SE_OffsetH), std::make_pair(AE_OffsetL, AE_OffsetH)),
-				FUNC_INFO(GetMinCircleAngle),
-				DKUtil::Hook::RuntimePatch(nullptr, &SE_Prolog),
-				DKUtil::Hook::RuntimePatch(&AE_Epilog, &SE_Epilog),
-				DKUtil::Hook::HookFlag::kSkipNOP);
+			// checked: 1.6.1170, 1.7.99
+			REL::Relocation<std::uintptr_t> target{ REL::ID(50648), 0x4C };
+			REL::WriteSafeFill(target.address(), REL::NOP, 0x9);
 
-			handle->Enable();
+			auto trampolineJmp = Patch(target.address() + 0x9, REX::UNRESTRICTED_CAST<std::uintptr_t>(GetMinCircleAngle));
+			auto& trampoline = REL::GetTrampoline();
+			trampoline.write_jmp<5>(target.address(), trampoline.allocate(trampolineJmp));
 
-			INFO("{} Done!", __FUNCTION__);
+			REX::INFO("{} Done!", __FUNCTION__);
 		}
 	};
 
@@ -120,34 +118,41 @@ namespace CombatPathing
 	{
 		static float GetMaxCircleAngle();
 
-		static constexpr std::uintptr_t SE_FuncID = 46720;   //1407D8200
-		static constexpr std::ptrdiff_t SE_OffsetL = 0x2A2;  //1407D84A2
-		static constexpr std::ptrdiff_t SE_OffsetH = 0x2AA;  //1407D84AA
+		struct Patch : Xbyak::CodeGenerator
+		{
+			Patch(std::uintptr_t retn, std::uintptr_t func)
+			{
+				Xbyak::Label funcLabel;
+				Xbyak::Label retnLabel;
 
-		static constexpr std::uintptr_t AE_FuncID = 47916;   //1408158B0
-		static constexpr std::ptrdiff_t AE_OffsetL = 0x234;  //140815AE4
-		static constexpr std::ptrdiff_t AE_OffsetH = 0x23C;  //140815AEC
+				sub(rsp, 0x20);
+				call(ptr[rip + funcLabel]);  //call thunk
+				add(rsp, 0x20);
 
-		static constexpr Patch RelocateReturn{
-			// comiss xmm11, xmm0
-			"\x44\x0F\x2F\xD8",
-			4
+				comiss(xmm11, xmm0);
+
+				jmp(ptr[rip + retnLabel]);  //jump back to original code
+
+				L(funcLabel);
+				dq(func);
+
+				L(retnLabel);
+				dq(retn);
+			}
 		};
 
 	public:
 		static void InstallHook()
 		{
-			auto handle = DKUtil::Hook::AddCaveHook(
-				REL::RelocationID(SE_FuncID, AE_FuncID).address(),
-				REL::Relocate(std::make_pair(SE_OffsetL, SE_OffsetH), std::make_pair(AE_OffsetL, AE_OffsetH)),
-				FUNC_INFO(GetMaxCircleAngle),
-				nullptr,
-				&RelocateReturn,
-				DKUtil::Hook::HookFlag::kSkipNOP);
+			// checked: 1.6.1170, 1.7.99
+			REL::Relocation<std::uintptr_t> target{ REL::ID(47916), 0x234 };
+			REL::WriteSafeFill(target.address(), REL::NOP, 0x8);
 
-			handle->Enable();
+			auto trampolineJmp = Patch(target.address() + 0x8, REX::UNRESTRICTED_CAST<std::uintptr_t>(GetMaxCircleAngle));
+			auto& trampoline = REL::GetTrampoline();
+			trampoline.write_jmp<5>(target.address(), trampoline.allocate(trampolineJmp));
 
-			INFO("{} Done!", __FUNCTION__);
+			REX::INFO("{} Done!", __FUNCTION__);
 		}
 	};
 
@@ -156,12 +161,13 @@ namespace CombatPathing
 	public:
 		static void InstallHook()
 		{
-			REL::Relocation<std::uintptr_t> WithinHeadingAngleBase{ REL::RelocationID(46720, 47916) };  //AE: 1408158B0
+			// checked: 1.6.1170, 1.7.99
+			REL::Relocation<std::uintptr_t> WithinHeadingAngleBase{ REL::ID(47916) };
 
-			auto& trampoline = SKSE::GetTrampoline();
-			_WithinHeadingAngle = trampoline.write_call<5>(WithinHeadingAngleBase.address() + REL::Relocate(0x366, 0x2F2), WithinHeadingAngle);
+			auto& trampoline = REL::GetTrampoline();
+			_WithinHeadingAngle = trampoline.write_call<5>(WithinHeadingAngleBase.address() + 0x2F2, WithinHeadingAngle);
 
-			INFO("{} Done!", __FUNCTION__);
+			REX::INFO("{} Done!", __FUNCTION__);
 		}
 
 	private:

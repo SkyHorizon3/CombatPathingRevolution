@@ -1,23 +1,24 @@
-#include "RE/CombatBehaviorNodesMovement.h"
-#include "payloadHandler.h"
+#include "CPRHandler.h"
+#include "Constant.h"
+#include "Util.h"
 
-void CPRHandler::process(RE::Actor* actor, std::vector<std::string_view>* v, FUNCTION f)
+void CPRHandler::process(RE::Actor* actor, const std::vector<std::string_view>& tokens, const FUNCTION func)
 {
-	switch (f) {
+	switch (func) {
 	case FUNCTION::EnableAdvance:
-		enableAdvance(actor, v);
+		enableAdvance(actor, tokens);
 		break;
 	case FUNCTION::EnableBackoff:
-		enableBackoff(actor, v);
+		enableBackoff(actor, tokens);
 		break;
 	case FUNCTION::EnableCircling:
-		enableCircling(actor, v);
+		enableCircling(actor, tokens);
 		break;
 	case FUNCTION::EnableSurround:
-		enableSurround(actor, v);
+		enableSurround(actor, tokens);
 		break;
 	case FUNCTION::EnableFallback:
-		enableFallback(actor, v);
+		enableFallback(actor, tokens);
 		break;
 	case FUNCTION::DisableAll:
 		disableAll(actor);
@@ -25,53 +26,49 @@ void CPRHandler::process(RE::Actor* actor, std::vector<std::string_view>* v, FUN
 	}
 }
 
-static void SetCPRVariables(RE::Actor* a_actor, const std::string actionName, const std::vector<std::string>& paramNames, std::vector<std::string_view>* v)
+static void SetCPRVariables(RE::Actor* a_actor, const std::string& actionName, std::span<const char* const> paramNames, const std::vector<std::string_view>& v)
 {
-	DEBUG("Enable {} in actor :{}-{:x}", actionName, a_actor->GetName(), a_actor->GetFormID());
+	REX::DEBUG("Enable {} in actor :{}-{:x}", actionName, a_actor->GetName(), a_actor->GetFormID());
 	a_actor->SetGraphVariableBool(actionName, true);
 
-	for (int i = 0; i < paramNames.size(); i++) {
+	for (size_t i = 0; i < paramNames.size(); i++) {
 		const auto argIndex = i + 1;
 		float value;
-		if (argIndex < v->size() && Utils::string_view::to_float(v->at(argIndex), value)) {
+		if (argIndex < v.size() && CombatPathing::to_float(v.at(argIndex), value)) {
 			a_actor->SetGraphVariableFloat(paramNames[i], value);
 		} else {
-			DEBUG("Fail to parse argument \"{}\" for {} in actor :{}-{:x}", paramNames[i], actionName, a_actor->GetName(), a_actor->GetFormID());
+			REX::DEBUG("Fail to parse argument \"{}\" for {} in actor :{}-{:x}", paramNames[i], actionName, a_actor->GetName(), a_actor->GetFormID());
 			return;
 		}
 	}
 }
 
-void CPRHandler::enableAdvance(RE::Actor* a_actor, std::vector<std::string_view>* v)
+void CPRHandler::enableAdvance(RE::Actor* a_actor, const std::vector<std::string_view>& v)
 {
-	static const std::string actionName = "CPR_EnableAdvanceRadius";
-
-	static const std::vector<std::string> paramName = {
-		"CPR_InnerRadiusMin",
-		"CPR_InnerRadiusMid",
-		"CPR_InnerRadiusMax",
-		"CPR_OuterRadiusMin",
-		"CPR_OuterRadiusMid",
-		"CPR_OuterRadiusMax"
+	static constexpr std::array paramName = {
+		INNER_MIN_GV,
+		INNER_MID_GV,
+		INNER_MAX_GV,
+		OUTER_MIN_GV,
+		OUTER_MID_GV,
+		OUTER_MAX_GV
 	};
 
-	SetCPRVariables(a_actor, actionName, paramName, v);
+	SetCPRVariables(a_actor, ENABLE_RADIUS_GV, paramName, v);
 
 	if (InterruptActiveAction<RE::NodeCloseMovementAdvance>(a_actor)) {
-		DEBUG("Interrupt NodeCloseMovementAdvance in actor :{}-{:x}", a_actor->GetName(), a_actor->GetFormID());
+		REX::DEBUG("Interrupt NodeCloseMovementAdvance in actor :{}-{:x}", a_actor->GetName(), a_actor->GetFormID());
 	}
 }
 
-void CPRHandler::enableBackoff(RE::Actor* a_actor, std::vector<std::string_view>* v)
+void CPRHandler::enableBackoff(RE::Actor* a_actor, const std::vector<std::string_view>& v)
 {
-	static const std::string actionName = "CPR_EnableBackoff";
-
-	static const std::vector<std::string> paramNames = {
-		"CPR_BackoffMinDistMult",
-		"CPR_BackoffChance"
+	static constexpr std::array paramNames = {
+		BACKOFF_MULT_GV,
+		BACKOFF_CHANCE_GV
 	};
 
-	SetCPRVariables(a_actor, actionName, paramNames, v);
+	SetCPRVariables(a_actor, ENABLE_BACKOFF_GV, paramNames, v);
 	/*
 	if (InterruptActiveAction<RE::NodeCloseMovementBackoff>(a_actor)) {
 		DEBUG("Interrupt NodeCloseMovementBackoff in actor :{}-{:x}", a_actor->GetName(), a_actor->GetFormID());
@@ -79,19 +76,17 @@ void CPRHandler::enableBackoff(RE::Actor* a_actor, std::vector<std::string_view>
 	*/
 }
 
-void CPRHandler::enableCircling(RE::Actor* a_actor, std::vector<std::string_view>* v)
+void CPRHandler::enableCircling(RE::Actor* a_actor, const std::vector<std::string_view>& v)
 {
-	static const std::string actionName = "CPR_EnableCircling";
-
-	static const std::vector<std::string> paramNames = {
-		"CPR_CirclingDistMin",
-		"CPR_CirclingDistMax",
-		"CPR_CirclingAngleMin",
-		"CPR_CirclingAngleMax",
-		"CPR_CirclingViewConeAngle"
+	static constexpr std::array paramNames = {
+		CIRCLING_MIN_DIST_GV,
+		CIRCLING_MAX_DIST_GV,
+		CIRCLING_MIN_ANG_GV,
+		CIRCLING_MAX_ANG_GV,
+		CIRCLING_VIEW_ANG_GV
 	};
 
-	SetCPRVariables(a_actor, actionName, paramNames, v);
+	SetCPRVariables(a_actor, ENABLE_CIRCLING_GV, paramNames, v);
 	/*
 	if (InterruptActiveAction<RE::NodeCloseMovementCircle>(a_actor)) {
 		DEBUG("Interrupt NodeCloseMovementCircle in actor :{}-{:x}", a_actor->GetName(), a_actor->GetFormID());
@@ -99,16 +94,14 @@ void CPRHandler::enableCircling(RE::Actor* a_actor, std::vector<std::string_view
 	*/
 }
 
-void CPRHandler::enableSurround(RE::Actor* a_actor, std::vector<std::string_view>* v)
+void CPRHandler::enableSurround(RE::Actor* a_actor, const std::vector<std::string_view>& v)
 {
-	static const std::string actionName = "CPR_EnableSurround";
-
-	static const std::vector<std::string> paramNames = {
-		"CPR_SurroundDistMin",
-		"CPR_SurroundDistMax"
+	static constexpr std::array paramNames = {
+		SURROUND_DIST_MIN_GV,
+		SURROUND_DIST_MAX_GV
 	};
 
-	SetCPRVariables(a_actor, actionName, paramNames, v);
+	SetCPRVariables(a_actor, ENABLE_SURROUND_GV, paramNames, v);
 	/*
 	if (InterruptActiveAction<RE::NodeCloseMovementSurround>(a_actor)) {
 		DEBUG("Interrupt NodeCloseMovementSurround in actor :{}-{:x}", a_actor->GetName(), a_actor->GetFormID());
@@ -116,18 +109,16 @@ void CPRHandler::enableSurround(RE::Actor* a_actor, std::vector<std::string_view
 	*/
 }
 
-void CPRHandler::enableFallback(RE::Actor* a_actor, std::vector<std::string_view>* v)
+void CPRHandler::enableFallback(RE::Actor* a_actor, const std::vector<std::string_view>& v)
 {
-	static const std::string actionName = "CPR_EnableFallback";
-
-	static const std::vector<std::string> paramNames = {
-		"CPR_FallbackDistMin",
-		"CPR_FallbackDistMax",
-		"CPR_FallbackWaitTimeMin",
-		"CPR_FallbackWaitTimeMax",
+	static constexpr std::array paramNames = {
+		FALLBACK_DIST_MIN_GV,
+		FALLBACK_DIST_MAX_GV,
+		FALLBACK_TIME_MIN_GV,
+		FALLBACK_TIME_MAX_GV,
 	};
 
-	SetCPRVariables(a_actor, actionName, paramNames, v);
+	SetCPRVariables(a_actor, ENABLE_FALLBACK_GV, paramNames, v);
 	/*
 	if (InterruptActiveAction<RE::NodeCloseMovementFallback>(a_actor)) {
 		DEBUG("Interrupt NodeCloseMovementFallback in actor :{}-{:x}", a_actor->GetName(), a_actor->GetFormID());
@@ -137,22 +128,22 @@ void CPRHandler::enableFallback(RE::Actor* a_actor, std::vector<std::string_view
 
 void CPRHandler::disableAll(RE::Actor* a_actor)
 {
-	DEBUG("CPR:DisableAdvance for {} - {:x}", a_actor->GetName(), a_actor->formID);
+	REX::DEBUG("CPR:DisableAdvance for {} - {:x}", a_actor->GetName(), a_actor->formID);
 	a_actor->SetGraphVariableBool("CPR_EnableAdvanceRadius", false);
 
-	DEBUG("CPR:DisableBackoff for {} - {:x}", a_actor->GetName(), a_actor->formID);
+	REX::DEBUG("CPR:DisableBackoff for {} - {:x}", a_actor->GetName(), a_actor->formID);
 	//Enable data override on vanilla Backoff data.
 	a_actor->SetGraphVariableBool("CPR_EnableBackoff", false);
 
-	DEBUG("CPR:DisableCircling for {} - {:x}", a_actor->GetName(), a_actor->formID);
+	REX::DEBUG("CPR:DisableCircling for {} - {:x}", a_actor->GetName(), a_actor->formID);
 	//Enable data override on vanilla Circling data.
 	a_actor->SetGraphVariableBool("CPR_EnableCircling", false);
 
-	DEBUG("CPR:DisableSurround for {} - {:x}", a_actor->GetName(), a_actor->formID);
+	REX::DEBUG("CPR:DisableSurround for {} - {:x}", a_actor->GetName(), a_actor->formID);
 	//Enable data override on vanilla Surround data.
 	a_actor->SetGraphVariableBool("CPR_EnableSurround", false);
 
-	DEBUG("CPR:DisableFallback for {} - {:x}", a_actor->GetName(), a_actor->formID);
+	REX::DEBUG("CPR:DisableFallback for {} - {:x}", a_actor->GetName(), a_actor->formID);
 	//Enable data override on vanilla Fallback data.
 	a_actor->SetGraphVariableBool("CPR_EnableFallback", false);
 }

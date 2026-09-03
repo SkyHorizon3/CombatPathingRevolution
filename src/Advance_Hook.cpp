@@ -1,4 +1,5 @@
 #include "Advance_Hook.h"
+#include "Constant.h"
 #include "Util.h"
 
 namespace CombatPathing
@@ -14,7 +15,7 @@ namespace CombatPathing
 		if (!a_radius || !a_target || !IsMeleeOnly(a_attacker))
 			return;
 
-		bool enableAdvanceRadius;
+		bool enableAdvanceRadius = false;
 		if (a_attacker->GetGraphVariableBool(ENABLE_RADIUS_GV, enableAdvanceRadius) && enableAdvanceRadius) {
 			float InnerMin, InnerMid, InnerMax, OuterMin, OuterMid, OuterMax;
 			if (a_attacker->GetGraphVariableFloat(INNER_MIN_GV, InnerMin) && a_attacker->GetGraphVariableFloat(INNER_MID_GV, InnerMid) && a_attacker->GetGraphVariableFloat(INNER_MAX_GV, InnerMax) &&

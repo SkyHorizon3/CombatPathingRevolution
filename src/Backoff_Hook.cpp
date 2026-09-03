@@ -1,35 +1,33 @@
 #include "Backoff_Hook.h"
+#include "Constant.h"
 
 namespace CombatPathing
 {
-	static constexpr char ENABLE_BACKOFF_GV[] = "CPR_EnableBackoff",
-						  BACKOFF_MULT_GV[] = "CPR_BackoffMinDistMult", BACKOFF_CHANCE_GV[] = "CPR_BackoffChance";
-
-	float BackoffStartHook::RescaleBackoffMinDistanceMult(RE::Actor* a_actor, RE::Actor*)
+	float BackoffStartHook::RescaleBackoffMinDistanceMult(RE::Actor* a_target, [[maybe_unused]] RE::Actor* a_attacker)  // TODO: verify
 	{
 		bool enablebackoff = false;
-		if (a_actor && a_actor->GetGraphVariableBool(ENABLE_BACKOFF_GV, enablebackoff) && enablebackoff) {
+		if (a_target && a_target->GetGraphVariableBool(ENABLE_BACKOFF_GV, enablebackoff) && enablebackoff) {
 			float backoffMult;
-			if (a_actor->GetGraphVariableFloat(BACKOFF_MULT_GV, backoffMult))
+			if (a_target->GetGraphVariableFloat(BACKOFF_MULT_GV, backoffMult))
 				return backoffMult;
 		}
 
-		auto BackoffMinDistMultSettings = RE::GameSettingCollection::GetSingleton()->GetSetting("fCombatBackoffMinDistanceMult");
-		return BackoffMinDistMultSettings ? BackoffMinDistMultSettings->GetFloat() : 0.75f;
+		const auto multSetting = "fCombatBackoffMinDistanceMult"_gs;
+		return multSetting.has_value() ? *multSetting : 0.75f;
 	}
 
 	void BackoffChanceHookAE::thunk(RE::CombatBehaviorTree::TreeBuilder* a_array, RE::CombatBehaviorTreeNode* a_node)
 	{
-		static auto RecalculateBackoffChance = +[](RE::Actor* a_actor, RE::Actor*) -> float {
+		static auto RecalculateBackoffChance = +[](RE::Actor* a_target, [[maybe_unused]] RE::Actor* a_attacker) -> float {
 			bool enablebackoff = false;
-			if (a_actor && a_actor->GetGraphVariableBool(ENABLE_BACKOFF_GV, enablebackoff) && enablebackoff) {
+			if (a_target && a_target->GetGraphVariableBool(ENABLE_BACKOFF_GV, enablebackoff) && enablebackoff) {
 				float backoffChance;
-				if (a_actor->GetGraphVariableFloat(BACKOFF_CHANCE_GV, backoffChance))
+				if (a_target->GetGraphVariableFloat(BACKOFF_CHANCE_GV, backoffChance))
 					return backoffChance;
 			}
 
-			auto BackoffChanceSettings = RE::GameSettingCollection::GetSingleton()->GetSetting("fCombatBackoffChance");
-			return BackoffChanceSettings ? BackoffChanceSettings->GetFloat() : 0.25f;
+			const auto chanceSetting = "fCombatBackoffChance"_gs;
+			return chanceSetting.has_value() ? *chanceSetting : 0.25f;
 		};
 
 		Function chanceFunction{ RecalculateBackoffChance };

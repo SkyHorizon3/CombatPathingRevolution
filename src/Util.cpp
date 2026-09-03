@@ -2,6 +2,32 @@
 
 namespace CombatPathing
 {
+	void splitSV(std::vector<std::string_view>& ret, std::string_view strv, char delim)
+	{
+		size_t first = 0;
+
+		while (first < strv.size()) {
+			const auto second = strv.find_first_of(delim, first);
+
+			if (first != second)
+				ret.emplace_back(strv.substr(first, second - first));
+
+			if (second == std::string_view::npos)
+				break;
+
+			first = second + 1;
+		}
+	}
+
+	bool to_float(std::string_view input, float& out)
+	{
+		const std::from_chars_result res = std::from_chars(input.data(), input.data() + input.size(), out);
+		if (res.ec == std::errc::invalid_argument || res.ec == std::errc::result_out_of_range) {
+			return false;
+		}
+		return true;
+	}
+
 	bool IsMeleeOnly(RE::Actor* a_actor)
 	{
 		using TYPE = RE::CombatInventoryItem::TYPE;
@@ -9,8 +35,8 @@ namespace CombatPathing
 		if (!a_actor)
 			return false;
 
-		auto combatCtrl = a_actor->combatController;
-		auto CombatInv = combatCtrl ? combatCtrl->inventory : nullptr;
+		const auto combatCtrl = a_actor->combatController;
+		const auto CombatInv = combatCtrl ? combatCtrl->inventory : nullptr;
 		if (CombatInv) {
 			for (const auto item : CombatInv->equippedItems) {
 				if (item.item) {
@@ -33,7 +59,7 @@ namespace CombatPathing
 		return false;
 	}
 
-	float GetEquippementRange(CombatInventory* a_inv, bool a_full)
+	float GetEquippementRange(RE::CombatInventory* a_inv, bool a_full)
 	{
 		if (a_inv) {
 			return a_full ? a_inv->maximumRange : a_inv->optimalRange;
@@ -42,41 +68,14 @@ namespace CombatPathing
 		return 0.f;
 	}
 
-	std::optional<float> GetGameSettingFloat(const std::string a_name)
-	{
-		std::optional<float> result;
-
-		auto setting = GameSettingCollection::GetSingleton()->GetSetting(a_name.c_str());
-		if (setting) {
-			result.emplace(setting->GetFloat());
-		}
-
-		return result;
-	}
-
-	void SetGameSettingFloat(const std::string a_name, float a_value)
-	{
-		auto setting = GameSettingCollection::GetSingleton()->GetSetting(a_name.c_str());
-		if (setting) {
-			setting->data.f = a_value;
-		}
-	}
-
-	const float RescaleValue(float a_mult, float a_min, float a_max)
+	float RescaleValue(const float a_mult, const float a_min, const float a_max)
 	{
 		return a_min + a_mult * (a_max - a_min);
 	}
 
-	NodeArray& AddNode(NodeArray& arr, const char* name, CombatBehaviorTreeNode* node)
-	{
-		using func_t = decltype(&AddNode);
-		static REL::Relocation<func_t> func{ RELOCATION_ID(46261, 47516) };
-		return func(arr, name, node);
-	}
-
 	// used
 	// inlined in this function on AE: 140816E40 - better example: 14083233B
-	NodeArray& wrap_to_conditional_2(NodeArray& a, const char* name, void* extradata, CombatBehaviorTreeNode* node)
+	RE::CombatBehaviorTree::TreeBuilder* wrap_to_conditional_2(RE::CombatBehaviorTree::TreeBuilder* a, const char* name, void* extradata, CombatBehaviorTreeNode* node)
 	{
 		// use the the function we modified to imitate the 1.5.97 function - was the first plan, changed it to a REed implementation
 		//return _generic_foo<47845, NodeArray&, NodeArray&, const char*, void*, CombatBehaviorTreeNode*>(a, name, extradata, node);
@@ -91,15 +90,9 @@ namespace CombatPathing
 			condNode->name = RE::BSFixedString(DstBuf);
 			condNode->AddChild(node);
 
-			return AddNode(a, name, node);
+			return RE::CombatBehaviorTree::AddNode(a, name, node);
 		}
 
 		return a;
-	}
-
-	//used
-	NodeArray& pushback_parentof(NodeArray& array, NodeArray& cont_node)
-	{
-		return _generic_foo<47510, NodeArray&, NodeArray&, NodeArray&>(array, cont_node);
 	}
 }

@@ -4,10 +4,6 @@ namespace CombatPathing
 {
 	class AdvanceRadiusHook
 	{
-		static constexpr char ENABLE_RADIUS_GV[] = "CPR_EnableAdvanceRadius",
-							  INNER_MIN_GV[] = "CPR_InnerRadiusMin", INNER_MID_GV[] = "CPR_InnerRadiusMid", INNER_MAX_GV[] = "CPR_InnerRadiusMax",
-							  OUTER_MIN_GV[] = "CPR_OuterRadiusMin", OUTER_MID_GV[] = "CPR_OuterRadiusMid", OUTER_MAX_GV[] = "CPR_OuterRadiusMax";
-
 		struct RadiusPatch : Xbyak::CodeGenerator
 		{
 			RadiusPatch(std::uintptr_t retn, std::uintptr_t func)
@@ -115,8 +111,6 @@ namespace CombatPathing
 		}
 
 	private:
-		static constexpr char INTERRUPT_ACTION_GV[] = "CPR_InterruptAction";
-
 		static void Update(RE::CombatBehaviorAdvance* context);
 		static inline REL::Relocation<decltype(Update)> _Update;
 	};
