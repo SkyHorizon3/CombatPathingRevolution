@@ -1,7 +1,9 @@
 #include "Advance_Hook.h"
+#include "AnimationEvent_Hook.h"
 #include "Backoff_Hook.h"
 #include "Circling_Hook.h"
 #include "Fallback_Hook.h"
+#include "Settings.h"
 
 namespace CombatPathing
 {
@@ -28,7 +30,7 @@ namespace CombatPathing
 				FallbackWaitTimeHook1::InstallHook();
 				FallbackWaitTimeHook2::InstallHook();
 
-				Hooks::hook_animationEvent::install();
+				hook_animationEvent::install();
 			}
 			break;
 		default:
@@ -60,14 +62,17 @@ SKSE_PLUGIN_VERSION = []() {
 
 SKSE_PLUGIN_LOAD(const SKSE::LoadInterface* skse)
 {
+	const auto settings = CombatPathing::CPRSettings::GetSingleton();
+	settings->LoadSettings();
+
 	SKSE::Init(skse, SKSE::InitInfo{
 						 .log = true,
+						 .logLevel = settings->EnableDebugLog() ? REX::ELogLevel::Debug : REX::ELogLevel::Info,
 						 .logName = Plugin::NAME,
-						 //.trampoline = true,
-						 // .trampolineSize = 100,
+						 .trampoline = true,
+						 .trampolineSize = 500,
 					 });
 
-	// TODO: Add debug log setting
 	const auto runtimeVer = skse->RuntimeVersion();
 	REX::INFO("Game version: {}", runtimeVer);
 

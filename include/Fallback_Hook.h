@@ -71,10 +71,11 @@ namespace CombatPathing
 	public:
 		static void InstallHook()
 		{
+			// checked: 1.6.1170, 1.7.99
 			auto& trampoline = REL::GetTrampoline();
-
 			REL::Relocation<std::uintptr_t> Base{ REL::ID(47909) };
 			_GetFallbackWaitTime = trampoline.write_call<5>(Base.address() + 0x12E, GetFallbackWaitTime);
+
 			REX::INFO("{} Done!", __FUNCTION__);
 		}
 

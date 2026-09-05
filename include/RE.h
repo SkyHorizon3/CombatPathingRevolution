@@ -128,4 +128,56 @@ namespace RE
 		NiPointer<CombatTargetLocationSearchResult> searchResult;  // 18
 	};
 	static_assert(sizeof(CombatBehaviorAdvance) == 0x20);
+
+#define DECLARE_CombatBehaviorTreeNodeObjectBase(T)                                                  \
+	class CombatBehaviorTreeNodeObjectBase_##T##_ : public CombatBehaviorTreeNode                    \
+	{                                                                                                \
+	public:                                                                                          \
+		inline static constexpr auto RTTI = RE::RTTI_CombatBehaviorTreeNodeObjectBase_##T##_;        \
+                                                                                                     \
+		void* destroy(char need_freeself) override;                                                  \
+		void Exit(CombatBehaviorThread* a_thread) override;                                          \
+		void Update(CombatBehaviorThread* a_thread) override;                                        \
+		void Abort(CombatBehaviorThread* a_thread) override;                                         \
+		void SaveGame(CombatBehaviorThread* a_thread, BGSSaveFormBuffer* a_saveGameBuffer) override; \
+		void LoadGame(CombatBehaviorThread* a_thread, BGSLoadFormBuffer* a_loadGameBuffer) override; \
+		bool Validate(const CombatBehaviorTreeNode* a_node) override;                                \
+		const BSFixedString& GetType() override;                                                     \
+	};                                                                                               \
+	static_assert(sizeof(CombatBehaviorTreeNodeObjectBase_##T##_) == 0x28);
+
+#define DECLARE_CombatBehaviorTreeNodeObject_(T)                                               \
+	class CombatBehaviorTreeNodeObject_##T##_ : public CombatBehaviorTreeNodeObjectBase_##T##_ \
+	{                                                                                          \
+	public:                                                                                    \
+		inline static constexpr auto RTTI = RE::RTTI_CombatBehaviorTreeNodeObject_##T##_;      \
+		inline static constexpr auto VTABLE = RE::RTTI_CombatBehaviorTreeNodeObject_##T##_;    \
+                                                                                               \
+		void* destroy(char need_freeself) override;                                            \
+		CombatBehaviorTreeControl* act(CombatBehaviorTreeControl* control) override;           \
+                                                                                               \
+		static CombatBehaviorTreeNodeObject_##T##_* createnew();                               \
+	};                                                                                         \
+	static_assert(sizeof(CombatBehaviorTreeNodeObject_##T##_) == 0x28);
+
+#define DECLARE_CombatBehaviorTreeNodeObject(T)  \
+	DECLARE_CombatBehaviorTreeNodeObjectBase(T); \
+	DECLARE_CombatBehaviorTreeNodeObject_(T);
+
+#define DEFINE_CombatBehaviorTree_XXX__createnew(id, T) \
+	T* T::createnew()                                   \
+	{                                                   \
+		return _generic_foo<id, T*>();                  \
+	}
+
+#define DEFINE_CombatBehaviorTreeNodeObject_createnew(T, id) \
+	DEFINE_CombatBehaviorTree_XXX__createnew(id, CombatBehaviorTreeNodeObject_##T##_)
+
+	DECLARE_CombatBehaviorTreeNodeObject(CombatBehaviorAdvance);  // 1416960B0
+	using NodeCloseMovementAdvance = CombatBehaviorTreeNodeObject_CombatBehaviorAdvance_;
+
+	DECLARE_CombatBehaviorTreeNodeObject(CombatBehaviorCircle);  // 1416964D0
+	using NodeCloseMovementCircle = CombatBehaviorTreeNodeObject_CombatBehaviorCircle_;
+
+	RE::RTTI_CombatBehaviorTreeNodeObjectBase_CombatBehaviorAdvance_;
 }

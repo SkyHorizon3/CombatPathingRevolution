@@ -2,28 +2,16 @@
 
 namespace CombatPathing
 {
-	using namespace DKUtil::Alias;
-
-	class CPRSettings : public DKUtil::model::Singleton<CPRSettings>
+	class CPRSettings : public REX::TSingleton<CPRSettings>
 	{
-		friend DKUtil::model::Singleton<CPRSettings>;
+	public:
+		void LoadSettings();
+
+		bool EnableDebugLog() const { return enableDebugLog.GetValue(); }
 
 	private:
-		CPRSettings();
+		static constexpr auto path = R"(Data\SKSE\Plugins\CombatPathingRevolution.ini)"sv;
 
-		template <class T>
-		static void PrintSettingValue(const T& a_setting)
-		{
-			INFO("Setting:\"{}\" is {}"sv, a_setting.get_key(), a_setting.get_data());
-		}
-
-		Double fallbackChanceMin{ "fCombatFallbackChanceMin", "GameSettings" };
-		Double fallbackChanceMax{ "fCombatFallbackChanceMax", "GameSettings" };
-		Double circleChanceMin{ "fCombatCircleChanceMin", "GameSettings" };
-		Double circleChanceMax{ "fCombatCircleChanceMax", "GameSettings" };
-		Double circleAnglePlayerMult{ "fCombatCircleAnglePlayerMult", "GameSettings" };
-
-	public:
-		Boolean enableDebugLog{ "EnableDebugLog", "Debug" };
+		REX::TIniSetting<bool> enableDebugLog{ "Debug"sv, "EnableDebugLog"sv, false };
 	};
 }
