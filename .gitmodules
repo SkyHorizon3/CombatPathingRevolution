@@ -3,4 +3,4 @@
 	url = https://github.com/gottyduke/DKUtil.git
 [submodule "extern/CommonLibSSE"]
 	path = extern/CommonLibSSE
-	url = https://github.com/powerof3/CommonLibSSE.git
+	url = https://github.com/SkyHorizon3/CommonLibSSE.git

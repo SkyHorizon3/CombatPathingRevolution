@@ -75,7 +75,7 @@ namespace CombatPathing
 
 	// used
 	// inlined in this function on AE: 140816E40 - better example: 14083233B
-	RE::CombatBehaviorTree::TreeBuilder* wrap_to_conditional_2(RE::CombatBehaviorTree::TreeBuilder* a, const char* name, void* extradata, CombatBehaviorTreeNode* node)
+	RE::CombatBehaviorTree::TreeBuilder* wrap_to_conditional_2(RE::CombatBehaviorTree::TreeBuilder* a, const char* name, void* extradata, RE::CombatBehaviorTreeNode* node)
 	{
 		// use the the function we modified to imitate the 1.5.97 function - was the first plan, changed it to a REed implementation
 		//return _generic_foo<47845, NodeArray&, NodeArray&, const char*, void*, CombatBehaviorTreeNode*>(a, name, extradata, node);

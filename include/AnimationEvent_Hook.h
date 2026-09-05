@@ -22,7 +22,7 @@ namespace CombatPathing
 			return _ProcessEvent_NPC(a_sink, a_event, a_eventSource);
 		}
 
-		static void ProcessEvent(RE::BSTEventSink<RE::BSAnimationGraphEvent>* a_sink, RE::BSAnimationGraphEvent* a_event, RE::BSTEventSource<RE::BSAnimationGraphEvent>* a_eventSource)
+		static void ProcessEvent([[maybe_unused]] RE::BSTEventSink<RE::BSAnimationGraphEvent>* a_sink, RE::BSAnimationGraphEvent* a_event, [[maybe_unused]] RE::BSTEventSource<RE::BSAnimationGraphEvent>* a_eventSource)
 		{
 			if (a_event->tag != "CPR") {
 				return;

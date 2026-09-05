@@ -23,7 +23,7 @@ private:
 	static void enableFallback(RE::Actor* actor, const std::vector<std::string_view>& v);
 	static void disableAll(RE::Actor* actor);
 
-	template <typename T>
+	template <class T>
 	static bool InterruptActiveAction(RE::Actor* a_actor)
 	{
 		using NodeState = RE::CombatBehaviorThread::State;
@@ -34,7 +34,7 @@ private:
 			if (behaviorCtrl) {
 				for (auto nodeCtrl : behaviorCtrl->activeThreads) {
 					if (nodeCtrl && nodeCtrl->currentNode && nodeCtrl->state == NodeState::kUpdating) {
-						auto activeNode = skyrim_cast<T*>(nodeCtrl->currentNode);
+						auto activeNode = skyrim_cast<const T*>(nodeCtrl->currentNode);
 						if (activeNode) {
 							return a_actor->SetGraphVariableBool("CPR_InterruptAction", true);
 						}

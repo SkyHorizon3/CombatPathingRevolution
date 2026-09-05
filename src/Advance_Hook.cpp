@@ -6,7 +6,7 @@ namespace CombatPathing
 {
 	float AdvanceRadiusHook::RescaleRadius(float a_delta, float min, float mid, float max)
 	{
-		return a_delta <= 0.0 ? min + (mid - min) * (a_delta + 1.0) : mid + (max - mid) * a_delta;
+		return a_delta <= 0.0f ? min + (mid - min) * (a_delta + 1.0f) : mid + (max - mid) * a_delta;
 	}
 
 	// TODO: verify and test
@@ -17,7 +17,7 @@ namespace CombatPathing
 
 		bool enableAdvanceRadius = false;
 		if (a_attacker->GetGraphVariableBool(ENABLE_RADIUS_GV, enableAdvanceRadius) && enableAdvanceRadius) {
-			float InnerMin, InnerMid, InnerMax, OuterMin, OuterMid, OuterMax;
+			float InnerMin{}, InnerMid{}, InnerMax{}, OuterMin{}, OuterMid{}, OuterMax{};
 			if (a_attacker->GetGraphVariableFloat(INNER_MIN_GV, InnerMin) && a_attacker->GetGraphVariableFloat(INNER_MID_GV, InnerMid) && a_attacker->GetGraphVariableFloat(INNER_MAX_GV, InnerMax) &&
 				a_attacker->GetGraphVariableFloat(OUTER_MIN_GV, OuterMin) && a_attacker->GetGraphVariableFloat(OUTER_MID_GV, OuterMid) && a_attacker->GetGraphVariableFloat(OUTER_MAX_GV, OuterMax)) {
 				auto& inner = a_radius[0];
@@ -37,7 +37,7 @@ namespace CombatPathing
 	// TODO: verify and test
 	void AdvanceInterruptHook::Update(RE::CombatBehaviorAdvance* context)
 	{
-		auto attacker = RE::CombatBehaviorTree::GetAttacker();  // get_me
+		auto attacker = RE::CombatBehaviorTree::GetAttacker();
 		if (attacker && context) {
 			bool enableAdvanceRadius = false, interruptAction = false;
 			if (attacker->GetGraphVariableBool(INTERRUPT_ACTION_GV, interruptAction) && interruptAction && attacker->GetGraphVariableBool(ENABLE_RADIUS_GV, enableAdvanceRadius) && enableAdvanceRadius) {

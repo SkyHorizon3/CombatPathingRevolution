@@ -8,7 +8,7 @@ namespace CombatPathing
 	{
 		bool enableFallback = false;
 		if (a_actor && a_actor->GetGraphVariableBool(ENABLE_FALLBACK_GV, enableFallback) && enableFallback) {
-			float fallbackDistMin, fallbackDistMax;
+			float fallbackDistMin{}, fallbackDistMax{};
 
 			if (a_actor->GetGraphVariableFloat(FALLBACK_DIST_MIN_GV, fallbackDistMin) && a_actor->GetGraphVariableFloat(FALLBACK_DIST_MAX_GV, fallbackDistMax)) {
 				const auto combatCont = a_actor->combatController;
@@ -47,7 +47,7 @@ namespace CombatPathing
 	{
 		bool enableFallback = false;
 		if (a_actor && a_actor->GetGraphVariableBool(ENABLE_FALLBACK_GV, enableFallback) && enableFallback) {
-			float fallbackWaitTimeMin, fallbackWaitTimeMax;
+			float fallbackWaitTimeMin{}, fallbackWaitTimeMax{};
 
 			if (a_actor->GetGraphVariableFloat(FALLBACK_TIME_MIN_GV, fallbackWaitTimeMin) && a_actor->GetGraphVariableFloat(FALLBACK_TIME_MAX_GV, fallbackWaitTimeMax)) {
 				const auto combatCont = a_actor->combatController;

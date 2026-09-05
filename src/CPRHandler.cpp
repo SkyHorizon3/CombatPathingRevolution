@@ -56,7 +56,7 @@ void CPRHandler::enableAdvance(RE::Actor* a_actor, const std::vector<std::string
 
 	SetCPRVariables(a_actor, ENABLE_RADIUS_GV, paramName, v);
 
-	if (InterruptActiveAction<RE::NodeCloseMovementAdvance>(a_actor)) {
+	if (InterruptActiveAction<RE::CombatBehaviorTreeNodeObject<RE::CombatBehaviorAdvance>>(a_actor)) {
 		REX::DEBUG("Interrupt NodeCloseMovementAdvance in actor :{}-{:x}", a_actor->GetName(), a_actor->GetFormID());
 	}
 }

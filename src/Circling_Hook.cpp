@@ -12,7 +12,7 @@ namespace CombatPathing
 			if (combatCtr && combatCtr->combatStyle) {
 				bool enableCircling = false;
 				if (me->GetGraphVariableBool(ENABLE_CIRCLING_GV, enableCircling) && enableCircling) {
-					float circlingDistMin, circlingDistMax;
+					float circlingDistMin{}, circlingDistMax{};
 					if (me->GetGraphVariableFloat(CIRCLING_MIN_DIST_GV, circlingDistMin) && me->GetGraphVariableFloat(CIRCLING_MAX_DIST_GV, circlingDistMax)) {
 						const auto inv = combatCtr->inventory;
 						const auto optimalWeapRange = GetEquippementRange(inv);
@@ -43,18 +43,18 @@ namespace CombatPathing
 
 	RE::CombatBehaviorTree::TreeBuilder* AdvanceToCircleHook::PushBackNode(RE::CombatBehaviorTree::TreeBuilder* a_master, RE::CombatBehaviorTree::TreeBuilder* a_target)
 	{
-		auto nodeCirlce = RE::NodeCloseMovementCircle::createnew();
+		auto nodeCirlce = RE::CombatBehaviorTree::CreateObject<RE::CombatBehaviorCircle>();
 		if (nodeCirlce) {
 			RE::CombatBehaviorTree::TreeBuilder array;
 
-			auto& arr = wrap_to_conditional_2(&array, "CPR Circle", &ShouldCircle, nodeCirlce);
+			auto arr = wrap_to_conditional_2(&array, "CPR Circle", &ShouldCircle, nodeCirlce);
 			a_master = a_master->AppendLastNode(*arr);
 		}
 
 		return _PushBackNode(a_master, a_target);
 	}
 
-	bool AdvanceToCircleHook::ShouldCircle(void* a_context)
+	bool AdvanceToCircleHook::ShouldCircle([[maybe_unused]] void* a_context)
 	{
 		auto me = RE::CombatBehaviorTree::GetAttacker();
 		auto he = RE::CombatBehaviorTree::GetTarget();
