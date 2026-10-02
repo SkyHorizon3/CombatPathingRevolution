@@ -52,13 +52,20 @@ namespace CombatPathing
 
 				xor_(cl, cl);  // prologue
 
+				lahf();
+				push(rax);
+				mov(rdx, rdi);
+				movss(xmm2, xmm6);
+				mov(r9, rbp);
+				push(rbx);
+
 				sub(rsp, 0x20);
 				call(ptr[rip + funcLabel]);  //call thunk
 				add(rsp, 0x20);
 
-				/*pop(rbx);  // epilog
+				pop(rbx);  // epilog
 				pop(rax);
-				sahf();*/
+				sahf();
 
 				jmp(ptr[rip + retnLabel]);  //jump back to original code
 

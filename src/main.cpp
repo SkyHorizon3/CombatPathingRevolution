@@ -5,6 +5,8 @@
 #include "Fallback_Hook.h"
 #include "Settings.h"
 
+#include <spdlog/spdlog.h>
+
 namespace CombatPathing
 {
 	void OnInit(SKSE::MessagingInterface::Message* a_msg)
@@ -62,16 +64,21 @@ SKSE_PLUGIN_VERSION = []() {
 
 SKSE_PLUGIN_LOAD(const SKSE::LoadInterface* skse)
 {
+	SKSE::Init(skse, SKSE::InitInfo{
+						 .log = true,
+						 .logLevel = REX::ELogLevel::Info,
+						 .logName = Plugin::NAME,
+						 .trampoline = true,
+						 .trampolineSize = 600,
+					 });
+
 	const auto settings = CombatPathing::CPRSettings::GetSingleton();
 	settings->LoadSettings();
 
-	SKSE::Init(skse, SKSE::InitInfo{
-						 .log = true,
-						 .logLevel = settings->EnableDebugLog() ? REX::ELogLevel::Debug : REX::ELogLevel::Info,
-						 .logName = Plugin::NAME,
-						 .trampoline = true,
-						 .trampolineSize = 500,
-					 });
+	if (settings->EnableDebugLog()) {
+		spdlog::default_logger_raw()->set_level(spdlog::level::debug);
+		spdlog::default_logger_raw()->flush_on(spdlog::level::debug);
+	}
 
 	const auto runtimeVer = skse->RuntimeVersion();
 	REX::INFO("Game version: {}", runtimeVer);

@@ -23,12 +23,22 @@ namespace CombatPathing
 		store->Load();
 		store->Save();
 
-		REX::DEBUG("Setting:\"{}\" is {}", "EnableDebugLog", enableDebugLog.GetValue());
-		REX::DEBUG("Setting:\"{}\" is {}", fCombatFallbackChanceMin, fallbackChanceMin.GetValue());
-		REX::DEBUG("Setting:\"{}\" is {}", fCombatFallbackChanceMax, fallbackChanceMax.GetValue());
-		REX::DEBUG("Setting:\"{}\" is {}", fCombatCircleChanceMin, circleChanceMin.GetValue());
-		REX::DEBUG("Setting:\"{}\" is {}", fCombatCircleChanceMax, circleChanceMax.GetValue());
-		REX::DEBUG("Setting:\"{}\" is {}", fCombatCircleAnglePlayerMult, circleAnglePlayerMult.GetValue());
+		const auto setValue = [&](const std::string_view name, const float value) {
+			auto setting = RE::GameSettingCollection::GetSingleton()->GetSetting(name.data());
+			if (setting) {
+				setting->data.f = value;
+
+				if (enableDebugLog.GetValue()) {
+					REX::INFO("Setting:\"{}\" is {}", name, value);
+				}
+			}
+		};
+
+		setValue(fCombatFallbackChanceMin, fallbackChanceMin.GetValue());
+		setValue(fCombatFallbackChanceMax, fallbackChanceMax.GetValue());
+		setValue(fCombatCircleChanceMin, circleChanceMin.GetValue());
+		setValue(fCombatCircleChanceMax, circleChanceMax.GetValue());
+		setValue(fCombatCircleAnglePlayerMult, circleAnglePlayerMult.GetValue());
 
 		REX::INFO("{} Done!", __FUNCTION__);
 	}

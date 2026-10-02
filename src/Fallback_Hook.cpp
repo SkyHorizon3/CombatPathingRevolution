@@ -18,7 +18,6 @@ namespace CombatPathing
 					auto fallbackMult = combatStyle->closeRangeData.fallbackMult;
 					auto FallbackDistance = RescaleValue(fallbackMult, fallbackDistMin, fallbackDistMax);
 					auto diameter = a_actor->GetBoundRadius() * 2.0f;
-
 					return std::max(FallbackDistance, diameter);
 				}
 			}
@@ -32,8 +31,9 @@ namespace CombatPathing
 		bool enableFallback = false;
 		if (a_me && a_me->GetGraphVariableBool(ENABLE_FALLBACK_GV, enableFallback) && enableFallback) {
 			float fallbackDistMax;
-			if (a_me->GetGraphVariableFloat(FALLBACK_DIST_MAX_GV, fallbackDistMax))
+			if (a_me->GetGraphVariableFloat(FALLBACK_DIST_MAX_GV, fallbackDistMax)) {
 				return fallbackDistMax;
+			}
 		}
 
 		const auto maxFallbackDistSettings = "fCombatFallbackDistanceMax"_gs;
@@ -67,8 +67,9 @@ namespace CombatPathing
 		bool enableFallback = false;
 		if (a_me && a_me->GetGraphVariableBool(ENABLE_FALLBACK_GV, enableFallback) && enableFallback) {
 			float fallbackWaitTimeMin;
-			if (a_me->GetGraphVariableFloat(FALLBACK_TIME_MIN_GV, fallbackWaitTimeMin))
+			if (a_me->GetGraphVariableFloat(FALLBACK_TIME_MIN_GV, fallbackWaitTimeMin)) {
 				return fallbackWaitTimeMin;
+			}
 		}
 
 		const auto minFallbackTimeSettings = "fCombatFallbackWaitTimeMin"_gs;

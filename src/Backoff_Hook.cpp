@@ -8,8 +8,9 @@ namespace CombatPathing
 		bool enablebackoff = false;
 		if (a_target && a_target->GetGraphVariableBool(ENABLE_BACKOFF_GV, enablebackoff) && enablebackoff) {
 			float backoffMult;
-			if (a_target->GetGraphVariableFloat(BACKOFF_MULT_GV, backoffMult))
+			if (a_target->GetGraphVariableFloat(BACKOFF_MULT_GV, backoffMult)) {
 				return backoffMult;
+			}
 		}
 
 		const auto multSetting = "fCombatBackoffMinDistanceMult"_gs;
@@ -22,8 +23,9 @@ namespace CombatPathing
 			bool enablebackoff = false;
 			if (a_target && a_target->GetGraphVariableBool(ENABLE_BACKOFF_GV, enablebackoff) && enablebackoff) {
 				float backoffChance;
-				if (a_target->GetGraphVariableFloat(BACKOFF_CHANCE_GV, backoffChance))
+				if (a_target->GetGraphVariableFloat(BACKOFF_CHANCE_GV, backoffChance)) {
 					return backoffChance;
+				}
 			}
 
 			const auto chanceSetting = "fCombatBackoffChance"_gs;

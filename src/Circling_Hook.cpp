@@ -4,7 +4,7 @@
 
 namespace CombatPathing
 {
-	static bool WithinCricleRange(RE::Actor* me, RE::Actor* he)
+	static bool WithinCricleRange(const RE::Actor* me, const RE::Actor* he)
 	{
 		if (me && he) {
 			const auto combatCtr = me->combatController;
@@ -35,8 +35,9 @@ namespace CombatPathing
 		auto me = RE::CombatBehaviorTree::GetAttacker();
 		auto he = RE::CombatBehaviorTree::GetTarget();
 
-		if (!WithinCricleRange(me, he))
+		if (!WithinCricleRange(me, he)) {
 			return std::max(0.1f, a_minChance);  //The chance must be a bit greater than zero, ohterwise NPC would be stucked by barriers.
+		}
 
 		return _GetCirclingChance(a_circleMult, a_minChance, a_maxChance);
 	}
@@ -61,8 +62,9 @@ namespace CombatPathing
 
 		if (me && he) {
 			if (WithinCricleRange(me, he)) {
-				auto chance = GetCircleChance(me);
-				return REX::TRandom<float>().Generate(0.f, 1.0f) <= chance ? true : false;
+				const auto chance = GetCircleChance(me);
+				const auto random = REX::TRandom<float>().Generate(0.f, 1.0f);
+				return random <= chance ? true : false;
 			}
 		}
 
@@ -98,8 +100,9 @@ namespace CombatPathing
 				bool enableCircling = false;
 				if (me->GetGraphVariableBool(ENABLE_CIRCLING_GV, enableCircling) && enableCircling && IsMeleeOnly(me)) {
 					float circlingAngleMin;
-					if (me->GetGraphVariableFloat(CIRCLING_MIN_ANG_GV, circlingAngleMin))
+					if (me->GetGraphVariableFloat(CIRCLING_MIN_ANG_GV, circlingAngleMin)) {
 						return circlingAngleMin;
+					}
 				}
 			}
 		}
@@ -120,8 +123,9 @@ namespace CombatPathing
 				bool enableCircling = false;
 				if (me->GetGraphVariableBool(ENABLE_CIRCLING_GV, enableCircling) && enableCircling && IsMeleeOnly(me)) {
 					float circlingAngleMax;
-					if (me->GetGraphVariableFloat(CIRCLING_MAX_ANG_GV, circlingAngleMax))
+					if (me->GetGraphVariableFloat(CIRCLING_MAX_ANG_GV, circlingAngleMax)) {
 						return circlingAngleMax;
+					}
 				}
 			}
 		}

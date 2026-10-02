@@ -9,7 +9,6 @@ namespace CombatPathing
 		return a_delta <= 0.0f ? min + (mid - min) * (a_delta + 1.0f) : mid + (max - mid) * a_delta;
 	}
 
-	// TODO: verify and test
 	void AdvanceRadiusHook::RecalculateAdvanceRadius(bool a_fullRadius, float* a_radius, float a_delta, RE::Actor* a_target, RE::Actor* a_attacker)
 	{
 		if (!a_radius || !a_target || !IsMeleeOnly(a_attacker))
@@ -34,7 +33,6 @@ namespace CombatPathing
 		}
 	}
 
-	// TODO: verify and test
 	void AdvanceInterruptHook::Update(RE::CombatBehaviorAdvance* context)
 	{
 		auto attacker = RE::CombatBehaviorTree::GetAttacker();

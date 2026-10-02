@@ -2,32 +2,6 @@
 
 namespace CombatPathing
 {
-	void splitSV(std::vector<std::string_view>& ret, std::string_view strv, char delim)
-	{
-		size_t first = 0;
-
-		while (first < strv.size()) {
-			const auto second = strv.find_first_of(delim, first);
-
-			if (first != second)
-				ret.emplace_back(strv.substr(first, second - first));
-
-			if (second == std::string_view::npos)
-				break;
-
-			first = second + 1;
-		}
-	}
-
-	bool to_float(std::string_view input, float& out)
-	{
-		const std::from_chars_result res = std::from_chars(input.data(), input.data() + input.size(), out);
-		if (res.ec == std::errc::invalid_argument || res.ec == std::errc::result_out_of_range) {
-			return false;
-		}
-		return true;
-	}
-
 	bool IsMeleeOnly(RE::Actor* a_actor)
 	{
 		using TYPE = RE::CombatInventoryItem::TYPE;

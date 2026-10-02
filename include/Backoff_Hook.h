@@ -13,8 +13,8 @@ namespace CombatPathing
 				Xbyak::Label funcLabel;
 				Xbyak::Label retnLabel;
 
-				// don't execute original code, we return our float in xmm0
-				// rcx, rdx still populated with Actor*
+				mov(rdx, rsi);
+				mov(rcx, rbx);
 
 				sub(rsp, 0x20);
 				call(ptr[rip + funcLabel]);  //call thunk
@@ -55,16 +55,10 @@ namespace CombatPathing
 				Xbyak::Label funcLabel;
 				Xbyak::Label retnLabel;
 
-				push(rcx);
-				push(rdx);
-
 				mov(rdx, rbx);              // RE::CombatBehaviorTreeNode* a_node
 				lea(rcx, ptr[rbp - 0x28]);  // RE::CombatBehaviorTree::TreeBuilder* a_array
 
 				call(ptr[rip + funcLabel]);  //call thunk
-
-				pop(rdx);
-				pop(rcx);
 
 				jmp(ptr[rip + retnLabel]);  //jump back to original code
 

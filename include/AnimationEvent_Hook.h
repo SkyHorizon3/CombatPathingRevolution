@@ -43,10 +43,8 @@ namespace CombatPathing
 		{
 			REX::DEBUG("CPR instruction triggered for {}-{:x}; instruction: {}", actor->GetName(), actor->GetFormID(), a_payload);
 
-			std::vector<std::string_view> tokens;
-			splitSV(tokens, a_payload, '|');
-
-			switch (REX::STR::CONST_HASH(tokens[0].data())) {
+			const auto tokens = REX::STR::SPLIT(a_payload, "|");
+			switch (REX::STR::CONST_HASH(tokens[0])) {
 			case "EnableAdvance"_h:  // CPR.EnableAdvance|111|222|333|444|555|666
 				CPRHandler::process(actor, tokens, CPRHandler::FUNCTION::EnableAdvance);
 				break;
