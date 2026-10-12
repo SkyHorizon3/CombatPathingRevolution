@@ -1,6 +1,5 @@
 #include "CPRHandler.h"
 #include "Constant.h"
-#include "Util.h"
 
 void CPRHandler::process(RE::Actor* actor, const std::vector<std::string>& tokens, const FUNCTION func)
 {
@@ -22,6 +21,8 @@ void CPRHandler::process(RE::Actor* actor, const std::vector<std::string>& token
 		break;
 	case FUNCTION::DisableAll:
 		disableAll(actor);
+		break;
+	default:
 		break;
 	}
 }

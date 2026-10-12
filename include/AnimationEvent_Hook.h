@@ -24,7 +24,7 @@ namespace CombatPathing
 
 		static void ProcessEvent([[maybe_unused]] RE::BSTEventSink<RE::BSAnimationGraphEvent>* a_sink, RE::BSAnimationGraphEvent* a_event, [[maybe_unused]] RE::BSTEventSource<RE::BSAnimationGraphEvent>* a_eventSource)
 		{
-			if (a_event->tag != "CPR") {
+			if (!a_event || a_event->tag != "CPR") {
 				return;
 			}
 
@@ -44,6 +44,9 @@ namespace CombatPathing
 			REX::DEBUG("CPR instruction triggered for {}-{:x}; instruction: {}", actor->GetName(), actor->GetFormID(), a_payload);
 
 			const auto tokens = REX::STR::SPLIT(a_payload, "|");
+			if (tokens.empty())
+				return;
+
 			switch (REX::STR::CONST_HASH(tokens[0])) {
 			case "EnableAdvance"_h:  // CPR.EnableAdvance|111|222|333|444|555|666
 				CPRHandler::process(actor, tokens, CPRHandler::FUNCTION::EnableAdvance);
@@ -62,6 +65,8 @@ namespace CombatPathing
 				break;
 			case "DisableAll"_h:  // CPR.DisableAll
 				CPRHandler::process(actor, tokens, CPRHandler::FUNCTION::DisableAll);
+				break;
+			default:
 				break;
 			}
 		}

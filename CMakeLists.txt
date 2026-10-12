@@ -15,7 +15,7 @@ endif()
 message(STATUS "vcpkg overlay ports: ${VCPKG_OVERLAY_PORTS}")
 
 # project
-project(CombatPathingRevolution VERSION 0.30.1 LANGUAGES CXX)
+project(CombatPathingRevolution VERSION 0.30.3 LANGUAGES CXX)
 option(BUILD_SKYRIMAE "Build for Skyrim AE" OFF)
 
 # Set your project version and specify C++ standard
